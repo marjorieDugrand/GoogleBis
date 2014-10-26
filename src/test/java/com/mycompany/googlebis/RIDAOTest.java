@@ -12,11 +12,8 @@ import com.mycompany.googlebis.dao.RIDAOImpl;
 import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

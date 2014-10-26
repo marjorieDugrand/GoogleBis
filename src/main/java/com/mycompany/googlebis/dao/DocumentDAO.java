@@ -6,16 +6,19 @@
 
 package com.mycompany.googlebis.dao;
 
-import com.mycompany.googlebis.beans.*;
+import com.mycompany.googlebis.beans.DocumentBean;
 import java.util.List;
 
 /**
  *
  * @author Marjorie
  */
-public interface RIDAO {
+public interface DocumentDAO {
     
-    public void storeWordReferences(List<WordBean> wordReferences);
+    public void createDocument(DocumentBean document);
     
-    public List<DocumentBean> getDocumentCorrespondingToWords(String[] words);
+    public void createDocuments(List<DocumentBean> documents);
+    
+    public List<DocumentBean> readDocumentByName(String name);
+    
 }
