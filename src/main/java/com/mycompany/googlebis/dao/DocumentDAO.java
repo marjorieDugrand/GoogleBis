@@ -7,6 +7,7 @@
 package com.mycompany.googlebis.dao;
 
 import com.mycompany.googlebis.beans.DocumentBean;
+import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -19,6 +20,8 @@ public interface DocumentDAO {
     
     public void createDocuments(List<DocumentBean> documents);
     
-    public List<DocumentBean> readDocumentByName(String name);
+    public DocumentBean readDocumentByName(String name);
+    
+    public void deleteDocumentByName(String name);
     
 }

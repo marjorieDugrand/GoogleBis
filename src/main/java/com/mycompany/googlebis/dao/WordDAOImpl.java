@@ -1,9 +1,6 @@
 package com.mycompany.googlebis.dao;
 
-import com.mycompany.googlebis.beans.DocumentBean;
 import com.mycompany.googlebis.beans.WordBean;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -24,14 +21,19 @@ public class WordDAOImpl implements WordDAO {
           + "FROM words "
           + "WHERE word = ?";
     
+    private static final String WORD_DELETE = 
+            "DELETE FROM WORDS "
+            + "WHERE word = ?";
+    
     public void createWord(WordBean word) {
-        DAOUtilities.executeUpdate(WORD_CREATE, word.getWord());
+        System.out.println(word.getWord());
+        DAOUtilities.executeCreate(WORD_CREATE, word.getWord());
     }
 
     public WordBean readWordByName(String name) {
-        ResultSet resultSet = DAOUtilities.executeQuery(WORD_READ, name);
         WordBean word = null;
         try {
+            ResultSet resultSet = DAOUtilities.executeQuery(WORD_READ, name);
             if (resultSet != null && resultSet.next() ) {
                 word = map(resultSet);
             }
@@ -46,6 +48,10 @@ public class WordDAOImpl implements WordDAO {
         word.setId(resultSet.getInt("word_id"));
         word.setWord(resultSet.getString("word"));
         return word;
+    }
+
+    public void deleteWordByName(String name) {
+        DAOUtilities.executeDelete(WORD_DELETE, name);
     }
     
 }

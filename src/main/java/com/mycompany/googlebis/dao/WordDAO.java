@@ -17,4 +17,6 @@ public interface WordDAO {
     public void createWord(WordBean word);
     
     public WordBean readWordByName(String name);
+    
+    public void deleteWordByName(String name);
 }

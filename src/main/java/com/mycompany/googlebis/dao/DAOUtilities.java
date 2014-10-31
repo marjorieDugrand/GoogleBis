@@ -25,19 +25,18 @@ public class DAOUtilities {
     private static final String username = "google";
     private static final String password = "google";
     
-    public static Connection getConnection() throws SQLException {
+    private static Connection getConnection() throws SQLException {
         String driver = "org.apache.derby.jdbc.ClientDriver";
         try {
-                    Class.forName(driver).newInstance();
-            } catch (Exception ex) {
-                    System.err.println("fuuuuuuuuuuuck");
-                }
+            Class.forName(driver).newInstance();
+        } catch (Exception ex) {
+            System.err.println("connection problem");
+        }
         Connection con = DriverManager.getConnection(urlBase,username,password);
-        System.out.println("connected"); 
         return con;
     }
     
-    public static PreparedStatement initializePreparedStatement(Connection connection,
+    private static PreparedStatement initializePreparedStatement(Connection connection,
                                                                 String sqlRequest,
                                                                 boolean returnGeneratedKeys,
                                                                 Object... objects )
@@ -62,7 +61,7 @@ public class DAOUtilities {
      * Close a ResultSet
      * @param resultSet ResultSet that has to be closed
      */
-    public static void silentClose(ResultSet resultSet) {
+    private static void silentClose(ResultSet resultSet) {
         if ( resultSet != null ) {
             try {
                 resultSet.close();
@@ -76,7 +75,7 @@ public class DAOUtilities {
      * Close a Statement
      * @param statement Statement that has to be closed
      */
-    public static void silentClose( Statement statement ) {
+    private static void silentClose( Statement statement ) {
         if ( statement != null ) {
             try {
                 statement.close();
@@ -90,7 +89,7 @@ public class DAOUtilities {
      * Close a Connection
      * @param connection Connection that has to be closed
      */
-    public static void silentClose( Connection connection ) {
+    private static void silentClose( Connection connection ) {
         if ( connection != null ) {
             try {
                 connection.close();
@@ -105,19 +104,7 @@ public class DAOUtilities {
      * @param statement Statement that has to be closed
      * @param connection Connection that has to be closed
      */
-    public static void silentClose( Statement statement, Connection connection ) {
-        silentClose( statement );
-        silentClose( connection );
-    }
-
-    /**
-     * Silent closing of a ResultSet, a Statement and a Connection
-     * @param resultSet ResultSet that has to be closed
-     * @param statement Statement that has to be closed
-     * @param connection Connection that has to be closed
-     */
-    public static void silentClose( ResultSet resultSet, Statement statement, Connection connection ) {
-        silentClose( resultSet );
+    private static void silentClose( Statement statement, Connection connection ) {
         silentClose( statement );
         silentClose( connection );
     }
@@ -134,26 +121,38 @@ public class DAOUtilities {
         } catch (SQLException ex) {
                 Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            silentClose(preparedStatement, connection);
+            //silentClose(preparedStatement, connection);
         }
         return resultSet;
     }
     
-    public static void executeUpdate(String sqlUpdate, Object... parameters) {
+    private static void executeUpdate(String sqlUpdate, boolean keyGenerated, Object... parameters) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
             preparedStatement =
-                initializePreparedStatement(connection,sqlUpdate,true,parameters);
+                initializePreparedStatement(connection,sqlUpdate,keyGenerated,parameters);
             int statut = preparedStatement.executeUpdate();
             if ( statut == 0 ) {
                 throw new DAOException( "Update " + sqlUpdate + " failed, no line added in database." );
             }
         } catch (SQLException ex) {
-                Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+                throw new DAOException(ex);
         } finally {
-            DAOUtilities.silentClose(preparedStatement, connection);
+            silentClose(preparedStatement, connection);
         }
+    }
+    
+    public static void executeDelete(String sqlDelete, Object... parameters) {
+        try {
+            executeUpdate(sqlDelete, false, parameters);
+        } catch(DAOException exc) {
+            System.out.println("object already deleted");
+        }
+    }
+    
+    public static void executeCreate(String sqlCreate, Object... parameters) {
+        executeUpdate(sqlCreate, true, parameters);
     }
 }

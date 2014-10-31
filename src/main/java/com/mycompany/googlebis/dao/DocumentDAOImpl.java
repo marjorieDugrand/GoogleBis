@@ -28,9 +28,13 @@ public class DocumentDAOImpl implements DocumentDAO {
             "SELECT doc_id,name,link "
           + "FROM documents "
           + "WHERE name = ?";
+    
+    private static final String DOCUMENT_DELETE = 
+            "DELETE FROM DOCUMENTS "
+          + "WHERE name = ?";
         
     public void createDocument(DocumentBean document) {
-        DAOUtilities.executeUpdate(DOCUMENT_CREATE,
+        DAOUtilities.executeCreate(DOCUMENT_CREATE,
                                    document.getName(),
                                    document.getLink());
     }
@@ -41,25 +45,40 @@ public class DocumentDAOImpl implements DocumentDAO {
         }
     }
 
-    public List<DocumentBean> readDocumentByName(String name) {
-        List<DocumentBean> documents = new ArrayList<DocumentBean>();
+    public DocumentBean readDocumentByName(String name) {
+        DocumentBean document = null;
         ResultSet resultSet = DAOUtilities.executeQuery(READ_DOCUMENT_BY_NAME, name);
         try {
-            while(resultSet.next() ) {
-                DocumentBean document = map(resultSet);
-                documents.add(document);
+            if(resultSet.next() ) {
+                document = map(resultSet);
             }
         } catch (SQLException ex) {
             Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return documents;
+        return document;
     }
     
+    public List<DocumentBean> recoverDocuments(ResultSet rs) {
+        List<DocumentBean> documents = new ArrayList<DocumentBean>();
+        try {
+            while(rs.next()) {
+                DocumentBean document = map(rs);
+                documents.add(document);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return documents;
+    }
     private DocumentBean map(ResultSet rs) throws SQLException {     
         DocumentBean document = new DocumentBean();
         document.setId(rs.getInt("doc_id"));
         document.setName(rs.getString("name"));
         document.setLink(rs.getString("link"));
         return document;
+    }
+
+    public void deleteDocumentByName(String name) {
+        DAOUtilities.executeDelete(DOCUMENT_DELETE, name);
     }
 }
