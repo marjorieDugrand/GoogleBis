@@ -1,6 +1,8 @@
 package com.mycompany.googlebis.controller;
 
+import com.mycompany.googlebis.beans.DocumentBean;
 import com.mycompany.googlebis.dao.*;
+import java.io.File;
 
 /**
  *
@@ -10,20 +12,26 @@ public class GoogleController {
     private DocumentDAO documentDAO;
     private WordDAO wordDAO;
     private IndexationDAO indexationDAO;
+    private FileHandler fileHandler;
     
-    private static final String repository = "C:\\Users\\Marjorie\\Desktop\\corpus_test";
     
     public GoogleController() {
         documentDAO = new DocumentDAOImpl();
         wordDAO = new WordDAOImpl();
         indexationDAO = new IndexationDAOImpl();
+        fileHandler = new FileHandler();
     }
     
-    public void StoreCorpus() {
-        //get number of documents
-        for () {
-            
-            //parse document
+    public void storeCorpus() {
+        File[] documents = fileHandler.getCorpusList();
+        for(File document: documents) {
+                DocumentBean bean = new DocumentBean();
+                bean.setName(document.getName());
+                bean.setLink(document.getParent());
+                documentDAO.createDocument(bean);
+                //parse document
+            }
         }
-    }
+    
+    private void storeDocuement
 }

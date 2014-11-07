@@ -21,26 +21,21 @@ import static org.junit.Assert.*;
 public class GoogleControllerTest {
     
     private GoogleController googleController;
-    
-    public GoogleControllerTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+     
     @Before
     public void setUp() {
+        googleController = new GoogleController();
     }
     
     @After
     public void tearDown() {
     }
 
+    @Test
+    public void storeCorpusTest() {
+        googleController.storeCorpus();
+        
+    }
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //
