@@ -21,6 +21,14 @@ public class FileHandler {
         return directory.listFiles();
     }
     
-    public 
+    /**
+     * Parse the document to recover the important words that define it
+     * @param document 
+     * @return 
+     */
+    public String[] parseDocument(File document) {
+        //TODO
+        return null;
+    }
 
 }

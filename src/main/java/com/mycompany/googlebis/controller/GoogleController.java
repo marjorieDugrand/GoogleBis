@@ -25,13 +25,15 @@ public class GoogleController {
     public void storeCorpus() {
         File[] documents = fileHandler.getCorpusList();
         for(File document: documents) {
-                DocumentBean bean = new DocumentBean();
-                bean.setName(document.getName());
-                bean.setLink(document.getParent());
-                documentDAO.createDocument(bean);
-                //parse document
-            }
+            storeDocument(document);
+            //parse document
         }
+    }
     
-    private void storeDocuement
+    private void storeDocument(File document) {
+       DocumentBean bean = new DocumentBean();
+       bean.setName(document.getName());
+       bean.setLink(document.getParent());
+       documentDAO.createDocument(bean); 
+    }
 }
