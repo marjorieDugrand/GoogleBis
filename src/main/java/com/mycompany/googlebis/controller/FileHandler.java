@@ -7,6 +7,7 @@
 package com.mycompany.googlebis.controller;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  *
@@ -26,9 +27,13 @@ public class FileHandler {
      * @param document 
      * @return 
      */
-    public String[] parseDocument(File document) {
+    public Map<String,Integer> parseDocument(File document) {
         //TODO
         return null;
+    }
+
+    String[] parseRequest(String request) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

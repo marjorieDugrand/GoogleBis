@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +52,7 @@ public class IndexationDAOImpl implements IndexationDAO{
         wordDAO = new WordDAOImpl();
         documentDAO = new DocumentDAOImpl();
     }
-    public List<IndexationBean> getDocumentCorrespondingToWords(String[] words) {
+    public Map<String,List<IndexationBean>> getDocumentCorrespondingToWords(String[] words) {
         List<IndexationBean> index = new ArrayList<IndexationBean> ();
         for(String word: words) {
             ResultSet rs = DAOUtilities.executeQuery(READ_DOCUMENTS_BY_WORD_CONTAINED, word);
@@ -67,7 +68,8 @@ public class IndexationDAOImpl implements IndexationDAO{
                 Logger.getLogger(IndexationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return index;
+        return null;
+       // return index;
     }
 
     public void storeIndexations(String word, IndexationBean indexationBean) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mycompany.googlebis.RIDAOTest" time="1.75" tests="4" errors="0" skipped="0" failures="0">
+<testsuite name="com.mycompany.googlebis.RIDAOTest" time="1.696" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.7.0_45\jre\bin"/>
@@ -62,8 +62,9 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="nothingInDatabaseNothingRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.753"/>
-  <testcase name="oneRelationRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.204"/>
-  <testcase name="twoRelationsTwoRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.379"/>
-  <testcase name="twoWordsContainedByDocument" classname="com.mycompany.googlebis.RIDAOTest" time="0.414"/>
+  <testcase name="nothingInDatabaseNothingRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.51"/>
+  <testcase name="oneRelationRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.175"/>
+  <testcase name="twoRelationsTwoRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.248"/>
+  <testcase name="twoWordsContainedByDocument" classname="com.mycompany.googlebis.RIDAOTest" time="0.243"/>
+  <testcase name="wordsWithSpecialCharacters" classname="com.mycompany.googlebis.RIDAOTest" time="0.52"/>
 </testsuite>
