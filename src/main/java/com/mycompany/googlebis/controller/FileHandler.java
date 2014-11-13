@@ -7,7 +7,13 @@
 package com.mycompany.googlebis.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -24,12 +30,30 @@ public class FileHandler {
     
     /**
      * Parse the document to recover the important words that define it
+     * @author David
      * @param document 
      * @return 
+     * @throws java.io.IOException 
      */
-    public Map<String,Integer> parseDocument(File document) {
+    public Map<String,Integer> parseDocument(File document) throws IOException {
         //TODO
-        return null;
+        
+        HashMap wordMap = new HashMap<String, Integer>() ;
+        Integer i ;
+        
+        Document doc = Jsoup.parse(document, "UTF-8");
+        String text = doc.body().text() ;
+        String[] words = text.split(" ");
+        
+        for (String word : words) {
+            if (!(wordMap.containsKey(word))) {
+                wordMap.put(word, 1) ;
+            } else {
+                i = (Integer) wordMap.get(word) + 1 ;
+                wordMap.put(word, i) ;
+            }
+        }
+        return wordMap;
     }
 
     String[] parseRequest(String request) {
