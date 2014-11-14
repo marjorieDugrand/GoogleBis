@@ -12,6 +12,7 @@ package com.mycompany.googlebis.beans;
  */
 public class RequestBean {
     
+    private int id;
     private String name;
     private String text;
 
@@ -30,4 +31,13 @@ public class RequestBean {
     public void setText(String text) {
         this.text = text;
     }
+    
+        public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
 }
