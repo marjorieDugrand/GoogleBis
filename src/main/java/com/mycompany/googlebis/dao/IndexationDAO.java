@@ -7,6 +7,7 @@
 package com.mycompany.googlebis.dao;
 
 import com.mycompany.googlebis.beans.IndexationBean;
+import com.mycompany.googlebis.beans.RelationBean;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public interface IndexationDAO {
     
     public void storeIndexations(String word, IndexationBean indexationBeans);
     
-    public Map<String, List<IndexationBean>> getDocumentCorrespondingToWords(String[] words);
+    public Map<String, RelationBean> getDocumentCorrespondingToWords(String[] words);
     
     public void deleteIndexation(String word, String document);
     

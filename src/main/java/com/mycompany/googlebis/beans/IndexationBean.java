@@ -10,7 +10,7 @@ package com.mycompany.googlebis.beans;
  *
  * @author Marjorie
  */
-public class IndexationBean {
+public class IndexationBean implements Comparable {
     
     private String documentName;
     private String documentLink;
@@ -38,5 +38,17 @@ public class IndexationBean {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public int compareTo(Object o) {
+        if(o.getClass() == IndexationBean.class) {
+            IndexationBean bean = (IndexationBean)o;
+            if(this.weight >= bean.getWeight()) {
+                return documentName.compareTo(bean.getDocumentName());
+            } else {
+                return 1;
+            }
+        }
+        return 0;
     }
 }

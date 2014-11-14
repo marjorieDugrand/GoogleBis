@@ -8,7 +8,7 @@ package com.mycompany.googlebis;
 
 import com.mycompany.googlebis.beans.*;
 import com.mycompany.googlebis.dao.*;
-import java.util.List;
+import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
@@ -40,8 +40,8 @@ public class RIDAOTest {
         deleteWordReference("apple");
         deleteWordReference("peach");
         String[] keywords = {"apple","peach"};
-       // List<IndexationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
-        //assertEquals(documents.size(),0);
+        Map<String,RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
+        assertEquals(documents.size(),0);
     }
     
     @Test
@@ -51,9 +51,9 @@ public class RIDAOTest {
         createIndexation("apple", "doc1", 1);
         
         String[] keywords = {"apple","peach"};
-       // List<IndexationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
-      //  assertEquals(1, documents.size());
-       // assertEquals("doc1", documents.get(0).getDocumentName());
+        Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
+        assertEquals(1, documents.size());
+        assertEquals(1, documents.get("doc1").getIndexationsSize());
     }
     
     @Test
@@ -65,9 +65,10 @@ public class RIDAOTest {
         createIndexation("apple", "doc2", 3);
         
         String[] keywords = {"apple","peach"};
-    //    List<IndexationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
-      //  assertEquals(2, documents.size());
-      //  assertEquals("doc2", documents.get(0).getDocumentName()); 
+        Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
+        assertEquals(2, documents.size());
+        assertEquals(1, documents.get("doc2").getIndexationsSize());
+        assertEquals(1, documents.get("doc1").getIndexationsSize());
     }
     
     @Test
@@ -79,10 +80,10 @@ public class RIDAOTest {
         createIndexation("peach", "doc1", 1);
         
         String[] keywords = {"apple","peach"};
-    //    List<IndexationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
-       // assertEquals(2, documents.size());
-     //   assertEquals("doc1", documents.get(0).getDocumentName());
-      //  assertEquals(2, documents.get(0).getWeight()); 
+        Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
+        assertEquals(1, documents.size());
+        assertEquals(2, documents.get("doc1").getIndexationsSize());
+        assertEquals(2, documents.get("doc1").getWordIndexations().get(0).getWeight()); 
     }
     
     @Test
@@ -98,12 +99,12 @@ public class RIDAOTest {
         
         String[] keywords1 = {"élève","fenêtre", "noël"};
         String[] keywords2 = {"ça"};
-      //  List<IndexationBean> documents1 = indexationDAO.getDocumentCorrespondingToWords(keywords1);
-  //      List<IndexationBean> documents2 = indexationDAO.getDocumentCorrespondingToWords(keywords2);
-    //    assertEquals(4, documents1.size());
-        //assertEquals("doc1", documents1.get(0).getDocumentName());
-      //  assertEquals(1, documents2.size());
-      //  assertEquals("doc2", documents2.get(0).getDocumentName());
+        Map<String, RelationBean> documents1 = indexationDAO.getDocumentCorrespondingToWords(keywords1);
+        Map<String, RelationBean> documents2 = indexationDAO.getDocumentCorrespondingToWords(keywords2);
+        assertEquals(2, documents1.size());
+        assertEquals(3, documents1.get("doc1").getIndexationsSize());
+        assertEquals(1, documents2.size());
+        assertEquals(1, documents2.get("doc2").getIndexationsSize());
         
     }
     

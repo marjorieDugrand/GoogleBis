@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mycompany.googlebis.GoogleControllerTest" time="0.765" tests="1" errors="0" skipped="0" failures="0">
+<testsuite name="com.mycompany.googlebis.GoogleControllerTest" time="2.506" tests="1" errors="1" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.7.0_45\jre\bin"/>
@@ -62,5 +62,28 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="storeCorpusTest" classname="com.mycompany.googlebis.GoogleControllerTest" time="0.765"/>
+  <testcase name="request" classname="com.mycompany.googlebis.GoogleControllerTest" time="2.506">
+    <error type="java.lang.NullPointerException:">java.lang.NullPointerException: null
+	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:36)
+	at com.mycompany.googlebis.GoogleControllerTest.request(GoogleControllerTest.java:44)
+</error>
+  </testcase>
+</testsuite>né la duplication d&apos;une valeur de clé dans une contrainte de clé ou d&apos;index unique identifié par &apos;SQL141031134943980&apos; définie sur &apos;DOCUMENTS&apos;." type="com.mycompany.googlebis.dao.DAOException">com.mycompany.googlebis.dao.DAOException: java.sql.SQLIntegrityConstraintViolationException: L'instruction a été abandonnée parce qu'elle aurait entraîné la duplication d'une valeur de clé dans une contrainte de clé ou d'index unique identifié par 'SQL141031134943980' définie sur 'DOCUMENTS'.
+	at org.apache.derby.client.am.Statement.completeExecute(Unknown Source)
+	at org.apache.derby.client.net.NetStatementReply.parseEXCSQLSTTreply(Unknown Source)
+	at org.apache.derby.client.net.NetStatementReply.readExecute(Unknown Source)
+	at org.apache.derby.client.net.StatementReply.readExecute(Unknown Source)
+	at org.apache.derby.client.net.NetPreparedStatement.readExecute_(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.readExecute(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.flowExecute(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.executeUpdateX(Unknown Source)
+	at org.apache.derby.client.am.PreparedStatement.executeUpdate(Unknown Source)
+	at com.mycompany.googlebis.dao.DAOUtilities.executeUpdate(DAOUtilities.java:139)
+	at com.mycompany.googlebis.dao.DAOUtilities.executeCreate(DAOUtilities.java:159)
+	at com.mycompany.googlebis.dao.DocumentDAOImpl.createDocument(DocumentDAOImpl.java:37)
+	at com.mycompany.googlebis.controller.GoogleController.storeDocument(GoogleController.java:47)
+	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:34)
+	at com.mycompany.googlebis.GoogleControllerTest.request(GoogleControllerTest.java:44)
+</error>
+  </testcase>
 </testsuite>

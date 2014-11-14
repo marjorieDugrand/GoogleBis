@@ -25,14 +25,17 @@ public class DAOUtilities {
     private static final String username = "google";
     private static final String password = "google";
     
-    private static Connection getConnection() throws SQLException {
+    private static Connection getConnection(){
         String driver = "org.apache.derby.jdbc.ClientDriver";
+        Connection con = null;
         try {
             Class.forName(driver).newInstance();
-        } catch (Exception ex) {
-            System.err.println("connection problem");
+            con = DriverManager.getConnection(urlBase,username,password);
+        } catch (SQLException e1) {
+            throw new RuntimeException("connection problem", e1);
+        } catch (Exception e2) {
+            throw new RuntimeException("driver problem", e2);
         }
-        Connection con = DriverManager.getConnection(urlBase,username,password);
         return con;
     }
     
@@ -61,7 +64,7 @@ public class DAOUtilities {
      * Close a ResultSet
      * @param resultSet ResultSet that has to be closed
      */
-    private static void silentClose(ResultSet resultSet) {
+    public static void silentClose(ResultSet resultSet) {
         if ( resultSet != null ) {
             try {
                 resultSet.close();

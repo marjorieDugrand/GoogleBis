@@ -6,7 +6,9 @@
 
 package com.mycompany.googlebis;
 
+import com.mycompany.googlebis.beans.IndexationBean;
 import com.mycompany.googlebis.controller.GoogleController;
+import java.util.SortedSet;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -31,11 +33,24 @@ public class GoogleControllerTest {
     public void tearDown() {
     }
 
-    @Test
+    //@Test
     public void storeCorpusTest() {
         googleController.storeCorpus();
-        
+        //TODO
     }
+    
+    @Test
+    public void request() {
+        googleController.storeCorpus();
+        SortedSet<IndexationBean> results = googleController.recoverRequestDocument("personnes Intouchables");
+        for(IndexationBean index: results) {
+            System.out.println("document name: " + index.getDocumentName());
+            System.out.println("document link: " + index.getDocumentLink());
+            System.out.println("document weight: " + index.getWeight());
+        }
+    }
+    
+    
     // TODO add test methods here.
     // The methods must be annotated with annotation @Test. For example:
     //

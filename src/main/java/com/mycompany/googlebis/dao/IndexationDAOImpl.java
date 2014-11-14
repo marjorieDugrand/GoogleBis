@@ -7,9 +7,12 @@
 package com.mycompany.googlebis.dao;
 
 import com.mycompany.googlebis.beans.IndexationBean;
+import com.mycompany.googlebis.beans.RelationBean;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -52,24 +55,28 @@ public class IndexationDAOImpl implements IndexationDAO{
         wordDAO = new WordDAOImpl();
         documentDAO = new DocumentDAOImpl();
     }
-    public Map<String,List<IndexationBean>> getDocumentCorrespondingToWords(String[] words) {
-        List<IndexationBean> index = new ArrayList<IndexationBean> ();
+    public Map<String,RelationBean> getDocumentCorrespondingToWords(String[] words) {
+        Map<String, RelationBean> results = new HashMap<String, RelationBean>();
         for(String word: words) {
             ResultSet rs = DAOUtilities.executeQuery(READ_DOCUMENTS_BY_WORD_CONTAINED, word);
             try {
                 while(rs.next()) {
-                    IndexationBean bean = new IndexationBean();
-                    bean.setDocumentName(rs.getString("name"));
-                    bean.setDocumentLink(rs.getString("link"));
-                    bean.setWeight(Integer.parseInt(rs.getString("weight")));
-                    index.add(bean);
+                    String documentName = rs.getString("name");
+                    IndexationBean wordIndexation = new IndexationBean();
+                    wordIndexation.setDocumentName(documentName);
+                    wordIndexation.setDocumentLink(rs.getString("link"));
+                    wordIndexation.setWeight(rs.getInt("weight"));
+                    
+                    if(!results.containsKey(documentName)) {
+                        results.put(documentName, new RelationBean());
+                    }
+                    results.get(documentName).addWordIndexation(wordIndexation);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(IndexationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return null;
-       // return index;
+        return results;
     }
 
     public void storeIndexations(String word, IndexationBean indexationBean) {
