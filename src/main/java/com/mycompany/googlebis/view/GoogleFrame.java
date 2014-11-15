@@ -156,7 +156,7 @@ public class GoogleFrame extends javax.swing.JFrame {
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
         String precision = precisionText.getText();
         if(precision != null) {
-            Integer result = googleController.evaluateResultsPrecision(Integer.parseInt(precision));
+            Double result = googleController.evaluateResultsPrecision(Integer.parseInt(precision));
             evaluationText.setText(result.toString());
         }
     }//GEN-LAST:event_validateButtonActionPerformed

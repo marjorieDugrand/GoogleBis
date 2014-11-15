@@ -16,6 +16,6 @@ public interface PertinenceDAO {
     
     public void createPertinence(PertinenceBean request);
     
-    public PertinenceBean readPertinenceByFileName(String filename);
+    public PertinenceBean readPertinence(String requestName, String filename);
     
 }

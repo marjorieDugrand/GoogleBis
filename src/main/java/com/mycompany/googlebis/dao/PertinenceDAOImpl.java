@@ -7,7 +7,6 @@
 package com.mycompany.googlebis.dao;
 
 import com.mycompany.googlebis.beans.PertinenceBean;
-import com.mycompany.googlebis.beans.RequestBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -23,10 +22,10 @@ public class PertinenceDAOImpl implements PertinenceDAO{
             "INSERT INTO Pertinence (doc_id, request_id) "
           + "VALUES (?, ?)";
     
-    private static final String READ_PERTINENCE_BY_FILENAME =
+    private static final String READ_PERTINENCE =
             "SELECT p.id,d.name,r.name "
           + "FROM REQUESTS r, DOCUMENTS d, PERTINENCE p "
-          + "WHERE r.name=? AND r.request_id = p.request_id AND p.doc_id = d.doc_id";
+          + "WHERE r.name=? AND d.name=? AND r.request_id = p.request_id AND p.doc_id = d.doc_id";
     
     private final DocumentDAO documentDAO;
     private final RequestDAO requestDAO;
@@ -42,9 +41,9 @@ public class PertinenceDAOImpl implements PertinenceDAO{
         DAOUtilities.executeCreate(PERTINENCE_CREATE, docID, requestID);
     }
 
-    public PertinenceBean readPertinenceByFileName(String filename) {
+    public PertinenceBean readPertinence(String requestName, String filename) {
         
-        ResultSet rs = DAOUtilities.executeQuery(READ_PERTINENCE_BY_FILENAME, filename);
+        ResultSet rs = DAOUtilities.executeQuery(READ_PERTINENCE, requestName, filename);
         PertinenceBean pertinence = null;
         try {
             if(rs.next()) {

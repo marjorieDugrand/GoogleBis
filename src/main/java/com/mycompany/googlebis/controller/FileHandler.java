@@ -28,12 +28,12 @@ import org.jsoup.select.Elements;
  */
 public class FileHandler {
     
-    private static final String repository = "/media/data/RI/corpus_test";
-    private static final File stopListFile = new File("/media/data/RI/stopliste.txt") ;
-    private static final String requestFile = "/media/data/RI/requests.html" ;
+    private static final String REPOSITORY = "/media/data/RI/corpus_test";
+    private static final File STOPLISTFILE = new File("/media/data/RI/stopliste.txt") ;
+    private static final String REQUESTFILE = "/media/data/RI/requests.html" ;
     
     public File[] getCorpusList() {
-        File directory = new File(repository);
+        File directory = new File(REPOSITORY);
         return directory.listFiles();
     }
     
@@ -51,7 +51,7 @@ public class FileHandler {
 
         try {
             FileInputStream stopListFileInput ;
-            stopListFileInput = new FileInputStream(stopListFile);
+            stopListFileInput = new FileInputStream(STOPLISTFILE);
             BufferedReader stopListBufferedReader = new BufferedReader(new InputStreamReader(stopListFileInput));
             String stopWord ;
 
@@ -96,7 +96,7 @@ public class FileHandler {
         
         // RequestBean[] requestBeans = new RequestBean ;
         
-        Document doc = Jsoup.parse(requestFile, "UTF-8");
+        Document doc = Jsoup.parse(REQUESTFILE, "UTF-8");
         
         Elements requestNames = doc.select("h2") ;
         Elements requestTexts = doc.select("dl") ;
