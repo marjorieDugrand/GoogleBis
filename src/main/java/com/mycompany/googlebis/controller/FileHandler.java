@@ -57,6 +57,7 @@ public class FileHandler {
         HashMap<String, Integer> wordMap = new HashMap<String, Integer>() ;
         ArrayList stopList = new ArrayList() ;
         Integer i ;
+        int tailleMots = 5 ;
 
         try {
             FileInputStream stopListFileInput ;
@@ -80,8 +81,8 @@ public class FileHandler {
                 String wordLC = word.toLowerCase() ;
                 if (!(stopList.contains(wordLC))) {
                     
-                    if (wordLC.length() >= 5)
-                        wordLC = wordLC.substring(0, 5);
+                    if (wordLC.length() >= tailleMots)
+                        wordLC = wordLC.substring(0, tailleMots);
 
                     if (!(wordMap.containsKey(wordLC))) {
                         wordMap.put(wordLC, 1) ;
@@ -112,13 +113,16 @@ public class FileHandler {
     public ArrayList<RequestBean> parseFileRequest() { 
         
         ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
+        String baliseH2 = "h2" ;
+        String baliseDL = "dl" ;
+        String baliseDD = "dd" ;
 
         try {
             Document doc;
                 doc = Jsoup.parse(REQUESTFILE, "UTF-8");
 
-            Elements requestNames = doc.select("h2") ;
-            Elements requestTexts = doc.select("dl") ;
+            Elements requestNames = doc.select(baliseH2) ;
+            Elements requestTexts = doc.select(baliseDL) ;
             Elements requestKeyWords = new Elements();
 
             /*
@@ -130,7 +134,7 @@ public class FileHandler {
                 RequestBean request = new RequestBean() ;
                 
                 Element e=requestTexts.get(i);
-                requestKeyWords.add(e.select("dd").first());
+                requestKeyWords.add(e.select(baliseDD).first());
                 
                 request.setId(i);
                 request.setName(requestNames.get(i).text()) ;
@@ -156,7 +160,8 @@ public class FileHandler {
      * @return String list
      */
     public List<String> parseRequest(String request){
-        return Arrays.asList(request.split(", ")) ;
+        String regexp = ", " ;
+        return Arrays.asList(request.split(regexp)) ;
     }
     
     /**
@@ -174,10 +179,11 @@ public class FileHandler {
             qRelsFileInput = new FileInputStream(qrels);
             BufferedReader qRelsBufferedReader = new BufferedReader(new InputStreamReader(qRelsFileInput));
             String qRelsLine;
+            String regexp = "\\s+" ;
 
             while ((qRelsLine = qRelsBufferedReader.readLine()) != null) {
                 //qRelsLines.add(qRelsLine) ;
-                List<String> qRelsLines = Arrays.asList(qRelsLine.split("\\s+")) ;
+                List<String> qRelsLines = Arrays.asList(qRelsLine.split(regexp)) ;
                 
                 System.out.println(qRelsLines.toString()) ;
                 
