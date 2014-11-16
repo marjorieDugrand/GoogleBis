@@ -6,6 +6,7 @@
 
 package com.mycompany.googlebis.controller;
 
+import com.mycompany.googlebis.beans.RequestBean;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +33,7 @@ public class FileHandler {
     
     private static final String REPOSITORY = "/media/data/RI/corpus_test";
     private static final File STOPLISTFILE = new File("/media/data/RI/stopliste.txt") ;
-    private static final String REQUESTFILE = "/media/data/RI/requests.html" ;
+    private static final File REQUESTFILE = new File ("/media/data/RI/requests.html") ;
     
     public File[] getCorpusList() {
         File directory = new File(REPOSITORY);
@@ -70,6 +73,9 @@ public class FileHandler {
 
                 String wordLC = word.toLowerCase() ;
                 if (!(stopList.contains(wordLC))) {
+                    
+                    if (wordLC.length() >= 5)
+                        wordLC = wordLC.substring(0, 5);
 
                     if (!(wordMap.containsKey(wordLC))) {
                         wordMap.put(wordLC, 1) ;
@@ -79,7 +85,7 @@ public class FileHandler {
                     }
                 }
             }
-            System.out.println("nb mots :" + wordMap.size()) ;
+            //System.out.println("nb mots :" + wordMap.size()) ;
 
         
         
@@ -91,47 +97,64 @@ public class FileHandler {
         
         return wordMap;
     }
+    
+    /**
+     * Parse the requests file to recover the important words that define each request
+     * @author David 
+     * @return ArrayListRequestBean
+     */
+    public ArrayList<RequestBean> parseFileRequest() { 
+        
+        ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
 
-    public void parseFileRequest() { 
+        try {
+            Document doc;
+                doc = Jsoup.parse(REQUESTFILE, "UTF-8");
+
+            Elements requestNames = doc.select("h2") ;
+            Elements requestTexts = doc.select("dl") ;
+            Elements requestKeyWords = new Elements();
+
+            /*
+            System.out.println("nb h2 element : " + requestNames.size()) ;
+            System.out.println("nb dl element : " + requestTexts.size()) ;
+            */
+            
+            for (int i = 0 ; i<requestTexts.size() ; i++) {
+                RequestBean request = new RequestBean() ;
+                
+                Element e=requestTexts.get(i);
+                requestKeyWords.add(e.select("dd").first());
+                
+                request.setId(i);
+                request.setName(requestNames.get(i).text()) ;
+                request.setText(requestKeyWords.get(i).text()) ;
+
+                System.out.println(request.getName()) ;
+                System.out.println(request.getText()) ; 
+                
+                requestBeans.add(request) ;
+            }
         
-        // RequestBean[] requestBeans = new RequestBean ;
-        
-        Document doc = Jsoup.parse(REQUESTFILE, "UTF-8");
-        
-        Elements requestNames = doc.select("h2") ;
-        Elements requestTexts = doc.select("dl") ;
-        Elements requestKeyWords = new Elements();
-        
-        for (int i = 0 ; i<requestTexts.size() ; i++) {
-            Element e=requestTexts.get(i);
-            requestKeyWords.add(e.select("dd").first());
+        } catch (IOException ex) {
+            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        /*
-        for (int i=0 ; i<requestNames.size() ; i++) {
-            RequestBean request = new RequesBean() ;
-            request.setName(requestNames.get(i).text()) ;
-            request.setText(requestKeyWords.get(i).text()) ;
-            
-            requestBeans.add(request) ;
-        }*/
-        
+        return requestBeans ;
         
     }
     
-    public String[] parseRequest(String request){
-        return request.split(", ") ;
+    /**
+     * Parse the request key words to recover the important words that define the request
+     * @author David 
+     * @return String list
+     */
+    public List<String> parseRequest(String request){
+        return Arrays.asList(request.split(", ")) ;
     }
     
     public void parseQRels() {
-        
-    }
-    
-    private int compareTwoWords (String a, String b) {
-        a = a.substring(0, 5) ;
-        b = b.substring(0, 5) ;
-        
-        return a.compareTo(b) ;
+        // TODO
     }
     
     // Parse qrels et parse request
