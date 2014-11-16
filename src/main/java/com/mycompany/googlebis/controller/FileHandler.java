@@ -24,6 +24,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import static sun.org.mozilla.javascript.TopLevel.Builtins.Array;
 
 /**
  *
@@ -34,10 +35,16 @@ public class FileHandler {
     private static final String REPOSITORY = "/media/data/RI/corpus_test";
     private static final File STOPLISTFILE = new File("/media/data/RI/stopliste.txt") ;
     private static final File REQUESTFILE = new File ("/media/data/RI/requests.html") ;
+    private static final String QRELS = "/media/data/RI/qrels" ;
     
     public File[] getCorpusList() {
         File directory = new File(REPOSITORY);
         return directory.listFiles();
+    }
+    
+    public File[] getQRels() {
+        File qrelsFile = new File(QRELS) ;
+        return qrelsFile.listFiles() ;
     }
     
     /**
@@ -153,8 +160,50 @@ public class FileHandler {
         return Arrays.asList(request.split(", ")) ;
     }
     
-    public void parseQRels() {
+    /**
+     * Parse the qrel files 
+     * @author David 
+     * @param qrels
+     * @return hashmap
+     */
+    public HashMap<String,Float> parseQRels(File qrels) {
         // TODO
+        HashMap<String,Float> qRels = new HashMap<String,Float>() ;
+        
+        try {
+            FileInputStream qRelsFileInput;
+            qRelsFileInput = new FileInputStream(qrels);
+            BufferedReader qRelsBufferedReader = new BufferedReader(new InputStreamReader(qRelsFileInput));
+            String qRelsLine;
+
+            while ((qRelsLine = qRelsBufferedReader.readLine()) != null) {
+                //qRelsLines.add(qRelsLine) ;
+                List<String> qRelsLines = Arrays.asList(qRelsLine.split("\\s+")) ;
+                
+                System.out.println(qRelsLines.toString()) ;
+                
+                qRels.put(qRelsLines.get(0), StringToFloat(qRelsLines.get(1))) ;
+            }
+            qRelsFileInput.close();
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return qRels ;
+    }
+    
+    private Float StringToFloat(String number) {
+        float numberFloat = 0 ;
+        if (number.equals("1"))
+            numberFloat = (float) 1;
+        if (number.equals("0,5"))
+            numberFloat = (float) 0.5 ;
+        if (number.equals("0"))
+            numberFloat = (float) 0 ;
+        
+        return (Float) numberFloat ;
     }
     
     // Parse qrels et parse request
