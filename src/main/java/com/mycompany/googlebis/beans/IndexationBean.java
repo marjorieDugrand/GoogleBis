@@ -51,4 +51,18 @@ public class IndexationBean implements Comparable {
         }
         return 0;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        } else if(o.getClass() == IndexationBean.class) {
+            IndexationBean aux = (IndexationBean)o;
+            return documentName.equals(aux.getDocumentName())
+                && documentLink.equals(aux.getDocumentLink())
+                && weight == aux.getWeight();
+        } else {
+            return false;
+        }
+    }
 }

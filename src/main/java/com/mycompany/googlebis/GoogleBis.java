@@ -15,7 +15,7 @@ import com.mycompany.googlebis.view.GoogleFrame;
  */
 public class GoogleBis {
     
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         GoogleController googleController = new GoogleController();
         GoogleFrame googleFrame = new GoogleFrame(googleController);
     }
