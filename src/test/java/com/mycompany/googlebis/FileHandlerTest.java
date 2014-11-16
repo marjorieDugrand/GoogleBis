@@ -9,7 +9,6 @@ package com.mycompany.googlebis;
 import com.mycompany.googlebis.beans.RequestBean;
 import com.mycompany.googlebis.controller.FileHandler;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +20,7 @@ import org.junit.Test;
  */
 public class FileHandlerTest {
     
-    private FileHandler fileHandler = new FileHandler();
+    private final FileHandler fileHandler = new FileHandler();
     
     
     @Test
@@ -70,6 +69,21 @@ public class FileHandlerTest {
                 System.out.println(keyWordsRequest.get(j));
             }
         }
+    }
+    
+    @Test
+    public void parseQRelsTest () {
+        
+        File[] qRelsFiles = fileHandler.getQRels();
+        HashMap<String,Float> qrels = new HashMap<String, Float>() ;
+        
+        System.out.println("\nParse qrels test :\n");
+        
+        System.out.println(qRelsFiles[0].getAbsolutePath()) ;
+        System.out.println(qRelsFiles[0].getName()) ;
+        
+        qrels = fileHandler.parseQRels(qRelsFiles[0]) ;
+        System.out.println(qrels.toString())  ;
     }
     
 }
