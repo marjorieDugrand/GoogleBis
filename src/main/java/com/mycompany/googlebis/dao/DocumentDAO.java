@@ -7,7 +7,6 @@
 package com.mycompany.googlebis.dao;
 
 import com.mycompany.googlebis.beans.DocumentBean;
-import java.sql.ResultSet;
 import java.util.List;
 
 /**

@@ -6,6 +6,7 @@
 
 package com.mycompany.googlebis.controller;
 
+import com.mycompany.googlebis.beans.PertinenceBean;
 import com.mycompany.googlebis.beans.RequestBean;
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,7 @@ public class FileHandler {
      */
     public Map<String,Integer> parseDocument(File document) {
         
-        HashMap<String, Integer> wordMap = new HashMap<String, Integer>() ;
+        Map<String, Integer> wordMap = new HashMap<String, Integer>() ;
         ArrayList stopList = new ArrayList() ;
         Integer i ;
 
@@ -101,11 +101,11 @@ public class FileHandler {
     /**
      * Parse the requests file to recover the important words that define each request
      * @author David 
-     * @return ArrayListRequestBean
+     * @return ListRequestBean
      */
-    public ArrayList<RequestBean> parseFileRequest() { 
+    public List<RequestBean> parseFileRequest() { 
         
-        ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
+        List<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
 
         try {
             Document doc;
@@ -147,14 +147,16 @@ public class FileHandler {
     /**
      * Parse the request key words to recover the important words that define the request
      * @author David 
+     * @param request
      * @return String list
      */
-    public List<String> parseRequest(String request){
-        return Arrays.asList(request.split(", ")) ;
+    public String[] parseRequest(String request){
+        return request.split(", ");
     }
     
-    public void parseQRels() {
+    public List<PertinenceBean> parseQRels() {
         // TODO
+        return null;
     }
     
     // Parse qrels et parse request

@@ -29,18 +29,19 @@ public class SearchDelegate {
     private final IndexationDAO indexationDAO;
     private final RequestDAO requestDAO;
     private final PertinenceDAO pertinenceDAO;
+    private final FileHandler fileHandler;
     
     public SearchDelegate() {
         DAOFactory factory = DAOFactory.getInstance();
         indexationDAO = factory.getIndexationDAO();
         requestDAO = factory.getRequestDAO();
         pertinenceDAO = factory.getPertinenceDAO();
+        fileHandler = new FileHandler();
     }
     
     public SortedSet<IndexationBean> recoverRequestDocument(String requestName)  {
-        //String[] importantWords = fileHandler.parseRequest(request);
         requestText = requestDAO.readRequestByName(requestName).getText();
-        String[] importantWords = requestText.split(", ");
+        String[] importantWords = fileHandler.parseRequest(requestName);
         Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(importantWords);
         results = new TreeSet<IndexationBean>();
         for(String docName: documents.keySet()) {

@@ -9,6 +9,7 @@ package com.mycompany.googlebis.controller;
 import com.mycompany.googlebis.beans.*;
 import com.mycompany.googlebis.dao.*;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,11 +27,11 @@ public class CorpusStoringDelegate {
     
     public CorpusStoringDelegate() {
         DAOFactory factory = DAOFactory.getInstance();
-        this.documentDAO = factory.getDocumentDAO();
-        this.wordDAO = factory.getWordDAO();
-        this.indexationDAO = factory.getIndexationDAO();
-        this.requestDAO = factory.getRequestDAO();
-        this.pertinenceDAO = factory.getPertinenceDAO();
+        documentDAO = factory.getDocumentDAO();
+        wordDAO = factory.getWordDAO();
+        indexationDAO = factory.getIndexationDAO();
+        requestDAO = factory.getRequestDAO();
+        pertinenceDAO = factory.getPertinenceDAO();
         fileHandler = new FileHandler();
     }
     
@@ -79,11 +80,17 @@ public class CorpusStoringDelegate {
     }
     
     private void storeRequests() {
-        
+        List<RequestBean> requests = fileHandler.parseFileRequest();
+        for(RequestBean request: requests) {
+            requestDAO.createRequest(request);
+        }
     }
     
     private void storePertinence() {
-        
+        List<PertinenceBean> pertinences = fileHandler.parseQRels();
+        for(PertinenceBean pertinence: pertinences) {
+            pertinenceDAO.createPertinence(pertinence);
+        }
     }
     
 }

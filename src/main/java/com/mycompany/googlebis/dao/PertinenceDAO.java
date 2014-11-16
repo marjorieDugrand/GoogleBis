@@ -14,7 +14,7 @@ import com.mycompany.googlebis.beans.PertinenceBean;
  */
 public interface PertinenceDAO {
     
-    public void createPertinence(PertinenceBean request);
+    public void createPertinence(PertinenceBean pertinence);
     
     public PertinenceBean readPertinence(String requestName, String filename);
     
