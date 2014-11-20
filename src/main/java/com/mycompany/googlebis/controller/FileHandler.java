@@ -6,6 +6,7 @@
 
 package com.mycompany.googlebis.controller;
 
+import com.mycompany.googlebis.beans.PertinenceBean;
 import com.mycompany.googlebis.beans.RequestBean;
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,19 +32,22 @@ import org.jsoup.select.Elements;
  */
 public class FileHandler {
     
-    private static final String REPOSITORY = "/media/data/RI/corpus_test";
-    private static final File STOPLISTFILE = new File("/media/data/RI/stopliste.txt") ;
-    private static final File REQUESTFILE = new File ("/media/data/RI/requests.html") ;
-    private static final String QRELS = "/media/data/RI/qrels" ;
+    private static final String DOCUMENTSREPOSITORY = "D:\\RI\\corpus_test";
+    private static final File STOPLISTFILE = new File("D:\\RI\\stopliste.txt") ;
+    private static final File REQUESTFILE = new File ("D:\\RI\\requests.html") ;
+    private static final String QRELSREPOSITORY = "/media/data/RI/qrels" ;
     
     public File[] getCorpusList() {
-        File directory = new File(REPOSITORY);
-        return directory.listFiles();
+        return getDirectoryFiles(DOCUMENTSREPOSITORY);
     }
     
     public File[] getQRels() {
-        File qrelsFile = new File(QRELS) ;
-        return qrelsFile.listFiles() ;
+        return getDirectoryFiles(QRELSREPOSITORY);
+    }
+    
+    private File[] getDirectoryFiles(String repositoryName) {
+        File directory = new File(repositoryName);
+        return directory.listFiles();
     }
     
     /**
@@ -159,9 +163,19 @@ public class FileHandler {
      * @author David 
      * @return String list
      */
-    public List<String> parseRequest(String request){
+    public String[] parseRequest(String request){
         String regexp = ", " ;
-        return Arrays.asList(request.split(regexp)) ;
+        return request.split(regexp) ;
+    }
+    
+    
+    public List<PertinenceBean> parseQRels() {
+        List<PertinenceBean> pertinence = new ArrayList<PertinenceBean>();
+        File[] qrels = getQRels();
+        for(File qrel: qrels) {
+            pertinence.addAll(parseQRelsForRequest(qrel));
+        }
+        return pertinence;
     }
     
     /**
@@ -170,9 +184,8 @@ public class FileHandler {
      * @param qrels
      * @return hashmap
      */
-    public HashMap<String,Float> parseQRels(File qrels) {
-        // TODO
-        HashMap<String,Float> qRels = new HashMap<String,Float>() ;
+    public List<PertinenceBean> parseQRelsForRequest(File qrels) {
+        List<PertinenceBean> qRels = new ArrayList<PertinenceBean>();
         
         try {
             FileInputStream qRelsFileInput;
@@ -186,8 +199,11 @@ public class FileHandler {
                 List<String> qRelsLines = Arrays.asList(qRelsLine.split(regexp)) ;
                 
                 System.out.println(qRelsLines.toString()) ;
-                
-                qRels.put(qRelsLines.get(0), StringToFloat(qRelsLines.get(1))) ;
+                PertinenceBean bean = new PertinenceBean();
+                bean.setRequest(qrels.getName());
+                bean.setDocumentName(qRelsLines.get(0));
+                bean.setPertinence(StringToFloat(qRelsLines.get(1)));
+                qRels.add(bean);
             }
             qRelsFileInput.close();
             
@@ -210,5 +226,4 @@ public class FileHandler {
         
         return (Float) numberFloat ;
     }
-
 }

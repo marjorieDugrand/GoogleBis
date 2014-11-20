@@ -6,6 +6,7 @@
 
 package com.mycompany.googlebis;
 
+import com.mycompany.googlebis.beans.PertinenceBean;
 import com.mycompany.googlebis.beans.RequestBean;
 import com.mycompany.googlebis.controller.FileHandler;
 import java.io.File;
@@ -63,10 +64,10 @@ public class FileHandlerTest {
         }
         
         for (int i=0 ; i<keyWords.size() ; i++) {
-            List<String> keyWordsRequest = fileHandler.parseRequest(keyWords.get(i)) ;
+            String[] keyWordsRequest = fileHandler.parseRequest(keyWords.get(i)) ;
             
-            for (int j=0 ; j<keyWordsRequest.size() ; j++) {
-                System.out.println(keyWordsRequest.get(j));
+            for (int j=0 ; j<keyWordsRequest.length ; j++) {
+                System.out.println(keyWordsRequest[j]);
             }
         }
     }
@@ -75,14 +76,13 @@ public class FileHandlerTest {
     public void parseQRelsTest () {
         
         File[] qRelsFiles = fileHandler.getQRels();
-        HashMap<String,Float> qrels = new HashMap<String, Float>() ;
         
         System.out.println("\nParse qrels test :\n");
         
         System.out.println(qRelsFiles[0].getAbsolutePath()) ;
         System.out.println(qRelsFiles[0].getName()) ;
         
-        qrels = fileHandler.parseQRels(qRelsFiles[0]) ;
+        List<PertinenceBean> qrels = fileHandler.parseQRelsForRequest(qRelsFiles[0]) ;
         System.out.println(qrels.toString())  ;
     }
     

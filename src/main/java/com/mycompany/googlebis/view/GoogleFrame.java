@@ -162,7 +162,9 @@ public class GoogleFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_validateButtonActionPerformed
 
     private void storeCorpusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeCorpusButtonActionPerformed
+        System.out.println("storing corpus...");
         googleController.storeCorpus();
+        System.out.print("...corpus stored");
     }//GEN-LAST:event_storeCorpusButtonActionPerformed
 
 
