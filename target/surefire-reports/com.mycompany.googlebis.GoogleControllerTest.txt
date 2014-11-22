@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.mycompany.googlebis.GoogleControllerTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 2.944 sec <<< FAILURE!
-request(com.mycompany.googlebis.GoogleControllerTest)  Time elapsed: 2.671 sec  <<< ERROR!
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.793 sec <<< FAILURE!
+request(com.mycompany.googlebis.GoogleControllerTest)  Time elapsed: 0.684 sec  <<< ERROR!
 com.mycompany.googlebis.dao.DAOException: java.sql.SQLIntegrityConstraintViolationException: L'instruction a été abandonnée parce qu'elle aurait entraîné la duplication d'une valeur de clé dans une contrainte de clé ou d'index unique identifié par 'SQL141031134943980' définie sur 'DOCUMENTS'.
 	at org.apache.derby.client.am.Statement.completeExecute(Unknown Source)
 	at org.apache.derby.client.net.NetStatementReply.parseEXCSQLSTTreply(Unknown Source)
@@ -16,7 +16,9 @@ com.mycompany.googlebis.dao.DAOException: java.sql.SQLIntegrityConstraintViolati
 	at com.mycompany.googlebis.dao.DAOUtilities.executeUpdate(DAOUtilities.java:139)
 	at com.mycompany.googlebis.dao.DAOUtilities.executeCreate(DAOUtilities.java:159)
 	at com.mycompany.googlebis.dao.DocumentDAOImpl.createDocument(DocumentDAOImpl.java:37)
-	at com.mycompany.googlebis.controller.GoogleController.storeDocument(GoogleController.java:47)
-	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:34)
+	at com.mycompany.googlebis.controller.CorpusStoringDelegate.storeDocument(CorpusStoringDelegate.java:64)
+	at com.mycompany.googlebis.controller.CorpusStoringDelegate.storeDocumentCorpus(CorpusStoringDelegate.java:47)
+	at com.mycompany.googlebis.controller.CorpusStoringDelegate.storeCorpus(CorpusStoringDelegate.java:39)
+	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:22)
 	at com.mycompany.googlebis.GoogleControllerTest.request(GoogleControllerTest.java:44)
 

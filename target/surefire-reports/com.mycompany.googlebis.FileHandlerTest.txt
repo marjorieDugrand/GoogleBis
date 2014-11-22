@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: com.mycompany.googlebis.RIDAOTest
+Test set: com.mycompany.googlebis.FileHandlerTest
 -------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.641 sec
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.989 sec

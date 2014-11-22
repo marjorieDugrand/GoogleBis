@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mycompany.googlebis.RIDAOTest" time="5.53" tests="5" errors="0" skipped="0" failures="0">
+<testsuite name="com.mycompany.googlebis.FileHandlerTest" time="1.86" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.7.0_45\jre\bin"/>
@@ -14,7 +14,7 @@
     <property name="user.country" value="FR"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="Service Pack 1"/>
-    <property name="test" value="com.mycompany.googlebis.RIDAOTest"/>
+    <property name="test" value="com.mycompany.googlebis.FileHandlerTest"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="user.dir" value="C:\Users\Marjorie\Documents\NetBeansProjects\GoogleBis"/>
     <property name="java.runtime.version" value="1.7.0_45-b18"/>
@@ -45,7 +45,7 @@
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="C:\Program Files\Java\jdk1.7.0_45\jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=com.mycompany.googlebis.RIDAOTest -DnetbeansProjectMappings= -Dmaven.ext.class.path=C:\Users\Marjorie\AppData\Roaming\NetBeans\7.4\maven-nblib\netbeans-eventspy.jar surefire:test"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=com.mycompany.googlebis.FileHandlerTest -DnetbeansProjectMappings= -Dmaven.ext.class.path=C:\Users\Marjorie\AppData\Roaming\NetBeans\7.4\maven-nblib\netbeans-eventspy.jar surefire:test"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="fr"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -62,9 +62,8 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="nothingInDatabaseNothingRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="2.024"/>
-  <testcase name="oneRelationRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.813"/>
-  <testcase name="twoRelationsTwoRetrieved" classname="com.mycompany.googlebis.RIDAOTest" time="0.676"/>
-  <testcase name="twoWordsContainedByDocument" classname="com.mycompany.googlebis.RIDAOTest" time="0.722"/>
-  <testcase name="wordsWithSpecialCharacters" classname="com.mycompany.googlebis.RIDAOTest" time="1.295"/>
+  <testcase name="parseFileRequestTest" classname="com.mycompany.googlebis.FileHandlerTest" time="0.505"/>
+  <testcase name="parseRequestTest" classname="com.mycompany.googlebis.FileHandlerTest" time="0"/>
+  <testcase name="parseQRelsTest" classname="com.mycompany.googlebis.FileHandlerTest" time="0.365"/>
+  <testcase name="parseDocumentTest" classname="com.mycompany.googlebis.FileHandlerTest" time="0.99"/>
 </testsuite>

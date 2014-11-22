@@ -30,18 +30,20 @@ public class FileHandlerTest {
         File[] documents = fileHandler.getCorpusList() ;
         HashMap<String, Integer> wordMap = new HashMap<String, Integer>() ;
         
+        System.out.println("parse document test :");
+        
         for (File document : documents) {
             wordMap = (HashMap<String, Integer>) fileHandler.parseDocument(document) ;
         }
         
-        // System.out.println(wordMap.toString());
+        System.out.println(wordMap.toString());
     }
     
     @Test
     public void parseFileRequestTest () {
         ArrayList requests = new ArrayList() ;
         
-        System.out.println("\nTest parse file request :\n");
+        //System.out.println("\nTest parse file request :\n");
         
         requests = fileHandler.parseFileRequest() ;
     }
@@ -50,7 +52,7 @@ public class FileHandlerTest {
     @Test
     public void parseRequestTest() {
         
-        System.out.println("\nTest parse request :\n");
+        //System.out.println("\nTest parse request :\n");
         
         ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
         ArrayList<String> keyWords = new ArrayList<String> () ;

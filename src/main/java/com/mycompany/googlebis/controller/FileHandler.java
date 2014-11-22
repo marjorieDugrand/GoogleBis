@@ -32,10 +32,11 @@ import org.jsoup.select.Elements;
  */
 public class FileHandler {
     
-    private static final String DOCUMENTSREPOSITORY = "D:\\RI\\corpus_test";
-    private static final File STOPLISTFILE = new File("D:\\RI\\stopliste.txt") ;
-    private static final File REQUESTFILE = new File ("D:\\RI\\requests.html") ;
-    private static final String QRELSREPOSITORY = "/media/data/RI/qrels" ;
+    private static final String DIRECTORY = "D:\\RI\\";
+    private static final String DOCUMENTSREPOSITORY = DIRECTORY + "corpus_test";
+    private static final File STOPLISTFILE = new File(DIRECTORY + "stopliste.txt") ;
+    private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
+    private static final String QRELSREPOSITORY = DIRECTORY + "qrels" ;
     
     public File[] getCorpusList() {
         return getDirectoryFiles(DOCUMENTSREPOSITORY);
@@ -62,6 +63,7 @@ public class FileHandler {
         ArrayList stopList = new ArrayList() ;
         Integer i ;
         int tailleMots = 5 ;
+        String regexp = "\\s+|'";
 
         try {
             FileInputStream stopListFileInput ;
@@ -78,7 +80,7 @@ public class FileHandler {
 
             Document doc = Jsoup.parse(document, "UTF-8");
             String text = doc.body().text() ;
-            String[] words = text.split(" ");
+            String[] words = text.split(regexp);
 
             for (String word : words) {
 
@@ -87,7 +89,6 @@ public class FileHandler {
                     
                     if (wordLC.length() >= tailleMots)
                         wordLC = wordLC.substring(0, tailleMots);
-
                     if (!(wordMap.containsKey(wordLC))) {
                         wordMap.put(wordLC, 1) ;
                     } else {
@@ -96,7 +97,7 @@ public class FileHandler {
                     }
                 }
             }
-            //System.out.println("nb mots :" + wordMap.size()) ;
+            System.out.println("nb mots :" + wordMap.size()) ;
 
         
         
@@ -217,11 +218,11 @@ public class FileHandler {
     
     private Float StringToFloat(String number) {
         float numberFloat = 0 ;
-        if (number.equals("1"))
+        if (("1").equals(number))
             numberFloat = (float) 1;
-        if (number.equals("0,5"))
+        if (("0,5").equals(number))
             numberFloat = (float) 0.5 ;
-        if (number.equals("0"))
+        if (("0").equals(number))
             numberFloat = (float) 0 ;
         
         return (Float) numberFloat ;

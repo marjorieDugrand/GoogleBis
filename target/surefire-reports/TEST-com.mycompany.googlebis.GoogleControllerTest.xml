@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.mycompany.googlebis.GoogleControllerTest" time="2.506" tests="1" errors="1" skipped="0" failures="0">
+<testsuite name="com.mycompany.googlebis.GoogleControllerTest" time="0.684" tests="1" errors="1" skipped="0" failures="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.7.0_45\jre\bin"/>
@@ -30,7 +30,7 @@
     <property name="classworlds.conf" value="C:\Users\Marjorie\AppData\Roaming\NetBeans\7.4\maven\bin\m2.conf"/>
     <property name="netbeansProjectMappings" value=""/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Java\jdk1.7.0_45\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Tcl\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\Pinnacle\Shared Files\;C:\Program Files (x86)\BaseX\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files (x86)\CodeSourcery\Sourcery G++ Lite\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\Pinnacle\Shared Files\;C:\Program Files (x86)\BaseX\bin;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseSVN\bin;."/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk1.7.0_45\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Tcl\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\BaseX\bin;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files (x86)\CodeSourcery\Sourcery G++ Lite\bin;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Broadcom\Broadcom 802.11 Network Adapter\Driver;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\Pinnacle\Shared Files\;C:\Program Files (x86)\BaseX\bin;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files\TortoiseSVN\bin;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="51.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -62,13 +62,8 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase name="request" classname="com.mycompany.googlebis.GoogleControllerTest" time="2.506">
-    <error type="java.lang.NullPointerException:">java.lang.NullPointerException: null
-	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:36)
-	at com.mycompany.googlebis.GoogleControllerTest.request(GoogleControllerTest.java:44)
-</error>
-  </testcase>
-</testsuite>né la duplication d&apos;une valeur de clé dans une contrainte de clé ou d&apos;index unique identifié par &apos;SQL141031134943980&apos; définie sur &apos;DOCUMENTS&apos;." type="com.mycompany.googlebis.dao.DAOException">com.mycompany.googlebis.dao.DAOException: java.sql.SQLIntegrityConstraintViolationException: L'instruction a été abandonnée parce qu'elle aurait entraîné la duplication d'une valeur de clé dans une contrainte de clé ou d'index unique identifié par 'SQL141031134943980' définie sur 'DOCUMENTS'.
+  <testcase name="request" classname="com.mycompany.googlebis.GoogleControllerTest" time="0.684">
+    <error message="java.sql.SQLIntegrityConstraintViolationException: L&apos;instruction a été abandonnée parce qu&apos;elle aurait entraîné la duplication d&apos;une valeur de clé dans une contrainte de clé ou d&apos;index unique identifié par &apos;SQL141031134943980&apos; définie sur &apos;DOCUMENTS&apos;." type="com.mycompany.googlebis.dao.DAOException">com.mycompany.googlebis.dao.DAOException: java.sql.SQLIntegrityConstraintViolationException: L'instruction a été abandonnée parce qu'elle aurait entraîné la duplication d'une valeur de clé dans une contrainte de clé ou d'index unique identifié par 'SQL141031134943980' définie sur 'DOCUMENTS'.
 	at org.apache.derby.client.am.Statement.completeExecute(Unknown Source)
 	at org.apache.derby.client.net.NetStatementReply.parseEXCSQLSTTreply(Unknown Source)
 	at org.apache.derby.client.net.NetStatementReply.readExecute(Unknown Source)
@@ -81,8 +76,10 @@
 	at com.mycompany.googlebis.dao.DAOUtilities.executeUpdate(DAOUtilities.java:139)
 	at com.mycompany.googlebis.dao.DAOUtilities.executeCreate(DAOUtilities.java:159)
 	at com.mycompany.googlebis.dao.DocumentDAOImpl.createDocument(DocumentDAOImpl.java:37)
-	at com.mycompany.googlebis.controller.GoogleController.storeDocument(GoogleController.java:47)
-	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:34)
+	at com.mycompany.googlebis.controller.CorpusStoringDelegate.storeDocument(CorpusStoringDelegate.java:64)
+	at com.mycompany.googlebis.controller.CorpusStoringDelegate.storeDocumentCorpus(CorpusStoringDelegate.java:47)
+	at com.mycompany.googlebis.controller.CorpusStoringDelegate.storeCorpus(CorpusStoringDelegate.java:39)
+	at com.mycompany.googlebis.controller.GoogleController.storeCorpus(GoogleController.java:22)
 	at com.mycompany.googlebis.GoogleControllerTest.request(GoogleControllerTest.java:44)
 </error>
   </testcase>
