@@ -32,7 +32,8 @@ import org.jsoup.select.Elements;
  */
 public class FileHandler {
     
-    private static final String DIRECTORY = "D:\\RI\\";
+    //private static final String DIRECTORY = "D:\\RI\\";
+    private static final String DIRECTORY = "/media/data/RI/";
     private static final String DOCUMENTSREPOSITORY = DIRECTORY + "corpus_test";
     private static final File STOPLISTFILE = new File(DIRECTORY + "stopliste.txt") ;
     private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
@@ -63,7 +64,8 @@ public class FileHandler {
         ArrayList stopList = new ArrayList() ;
         Integer i ;
         int tailleMots = 5 ;
-        String regexp = "\\s+|'";
+        String regexp;
+        regexp = "\\s+|'|\\(|\\.|&|[0-9]|\"|\\-|\\:|\\?|\\||\\)|\\,|\\/|\\«|@|\\!|\\+|\\>";
 
         try {
             FileInputStream stopListFileInput ;
@@ -76,7 +78,7 @@ public class FileHandler {
             }
             stopListFileInput.close();
 
-            System.out.println(stopList.toString());
+            //System.out.println(stopList.toString());
 
             Document doc = Jsoup.parse(document, "UTF-8");
             String text = doc.body().text() ;
@@ -144,9 +146,6 @@ public class FileHandler {
                 request.setId(i);
                 request.setName(requestNames.get(i).text()) ;
                 request.setText(requestKeyWords.get(i).text()) ;
-
-                System.out.println(request.getName()) ;
-                System.out.println(request.getText()) ; 
                 
                 requestBeans.add(request) ;
             }
@@ -198,10 +197,13 @@ public class FileHandler {
             while ((qRelsLine = qRelsBufferedReader.readLine()) != null) {
                 //qRelsLines.add(qRelsLine) ;
                 List<String> qRelsLines = Arrays.asList(qRelsLine.split(regexp)) ;
+                String name = qrels.getName() ;
+                List<String> fileName = Arrays.asList(name.split("\\.")) ;
                 
-                System.out.println(qRelsLines.toString()) ;
+                //System.out.println(qRelsLines.toString()) ;
                 PertinenceBean bean = new PertinenceBean();
-                bean.setRequest(qrels.getName());
+                
+                bean.setRequest(fileName.get(0));
                 bean.setDocumentName(qRelsLines.get(0));
                 bean.setPertinence(StringToFloat(qRelsLines.get(1)));
                 qRels.add(bean);

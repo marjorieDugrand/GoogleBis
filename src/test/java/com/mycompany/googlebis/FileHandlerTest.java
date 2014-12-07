@@ -52,7 +52,7 @@ public class FileHandlerTest {
     @Test
     public void parseRequestTest() {
         
-        //System.out.println("\nTest parse request :\n");
+        System.out.println("\nTest parse request :\n");
         
         ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
         ArrayList<String> keyWords = new ArrayList<String> () ;
@@ -81,11 +81,11 @@ public class FileHandlerTest {
         
         System.out.println("\nParse qrels test :\n");
         
-        System.out.println(qRelsFiles[0].getAbsolutePath()) ;
-        System.out.println(qRelsFiles[0].getName()) ;
-        
         List<PertinenceBean> qrels = fileHandler.parseQRelsForRequest(qRelsFiles[0]) ;
-        System.out.println(qrels.toString())  ;
+        
+        for (PertinenceBean qrel : qrels) {
+            System.out.println(qrel.getRequest() + " : " + qrel.getDocumentName() + "->" + qrel.getPertinence());
+        }
     }
     
 }
