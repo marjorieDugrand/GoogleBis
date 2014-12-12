@@ -19,4 +19,6 @@ public interface WordDAO {
     public WordBean readWordByName(String name);
     
     public void deleteWordByName(String name);
+    
+    public void deleteTable();
 }

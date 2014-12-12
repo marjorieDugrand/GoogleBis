@@ -25,6 +25,9 @@ public class WordDAOImpl implements WordDAO {
             "DELETE FROM WORDS "
             + "WHERE word = ?";
     
+    private static final String DELETE_TABLE = 
+            "DELETE FROM WORDS";
+    
     public void createWord(WordBean word) {
         System.out.println(word.getWord());
         DAOUtilities.executeCreate(WORD_CREATE, word.getWord());
@@ -52,6 +55,10 @@ public class WordDAOImpl implements WordDAO {
 
     public void deleteWordByName(String name) {
         DAOUtilities.executeDelete(WORD_DELETE, name);
+    }
+
+    public void deleteTable() {
+        DAOUtilities.executeDelete(WORD_READ);
     }
     
 }

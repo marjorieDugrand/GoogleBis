@@ -19,13 +19,16 @@ import java.util.logging.Logger;
 public class RequestDAOImpl implements RequestDAO{
 
     private static final String REQUEST_CREATE =
-            "INSERT INTO Requests (name, texte) "
+            "INSERT INTO Requests (req_name, text) "
           + "VALUES (?, ?)";
     
     private static final String READ_REQUEST_BY_NAME =
-            "SELECT id,name,texte "
+            "SELECT request_id,req_name,text "
           + "FROM Requests "
-          + "WHERE name=?";
+          + "WHERE req_name=?";
+    
+    private static final String DELETE_TABLE = 
+            "DELETE FROM REQUESTS";
     
     public void createRequest(RequestBean request) {
         DAOUtilities.executeCreate(REQUEST_CREATE, request.getName(), request.getText());
@@ -47,9 +50,14 @@ public class RequestDAOImpl implements RequestDAO{
     
     private RequestBean map(ResultSet rs)throws SQLException{
         RequestBean request = new RequestBean();
-        request.setName(rs.getString("name"));
-        request.setText(rs.getString("texte"));
+        request.setId(rs.getInt("request_id"));
+        request.setName(rs.getString("req_name"));
+        request.setText(rs.getString("text"));
         return request;
+    }
+
+    public void deleteTable() {
+        DAOUtilities.executeDelete(DELETE_TABLE);
     }
     
 }

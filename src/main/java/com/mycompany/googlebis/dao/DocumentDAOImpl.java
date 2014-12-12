@@ -21,17 +21,20 @@ import java.util.logging.Logger;
 public class DocumentDAOImpl implements DocumentDAO {
 
     private static final String DOCUMENT_CREATE =
-            "INSERT INTO Documents (name, link) "
+            "INSERT INTO Documents (doc_name, link) "
           + "VALUES (?, ?)";
     
     private static final String READ_DOCUMENT_BY_NAME =
-            "SELECT doc_id,name,link "
+            "SELECT doc_id,doc_name,link "
           + "FROM documents "
-          + "WHERE name = ?";
+          + "WHERE doc_name = ?";
     
     private static final String DOCUMENT_DELETE = 
             "DELETE FROM DOCUMENTS "
-          + "WHERE name = ?";
+          + "WHERE doc_name = ?";
+    
+    private static final String DELETE_TABLE =
+            "DELETE FROM DOCUMENTS";
         
     public void createDocument(DocumentBean document) {
         DAOUtilities.executeCreate(DOCUMENT_CREATE,
@@ -73,12 +76,16 @@ public class DocumentDAOImpl implements DocumentDAO {
     private DocumentBean map(ResultSet rs) throws SQLException {     
         DocumentBean document = new DocumentBean();
         document.setId(rs.getInt("doc_id"));
-        document.setName(rs.getString("name"));
+        document.setName(rs.getString("doc_name"));
         document.setLink(rs.getString("link"));
         return document;
     }
 
     public void deleteDocumentByName(String name) {
         DAOUtilities.executeDelete(DOCUMENT_DELETE, name);
+    }
+
+    public void deleteTable() {
+        DAOUtilities.executeDelete(DELETE_TABLE);
     }
 }

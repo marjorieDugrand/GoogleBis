@@ -21,11 +21,13 @@ public interface IndexationDAO {
     
     public void storeIndexations(String word, IndexationBean indexationBeans);
     
-    public Map<String, RelationBean> getDocumentCorrespondingToWords(String[] words);
+    public Map<String, RelationBean> getDocumentCorrespondingToWords(List<String> words);
     
     public void deleteIndexation(String word, String document);
     
     public void deleteIndexationByDocument(String document);
     
     public void deleteIndexationByWord(String word);
+    
+    public void deleteTable();
 }

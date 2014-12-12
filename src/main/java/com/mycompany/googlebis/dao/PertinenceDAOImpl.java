@@ -19,13 +19,17 @@ import java.util.logging.Logger;
 public class PertinenceDAOImpl implements PertinenceDAO{
 
     private static final String PERTINENCE_CREATE =
-            "INSERT INTO Pertinence (doc_id, request_id) "
-          + "VALUES (?, ?)";
+            "INSERT INTO Pertinence (doc_id, request_id, pertinence) "
+          + "VALUES (?, ?, ?)";
     
     private static final String READ_PERTINENCE =
-            "SELECT p.id,d.name,r.name "
+            "SELECT p.id,d.doc_name,r.req_name,p.pertinence "
           + "FROM REQUESTS r, DOCUMENTS d, PERTINENCE p "
-          + "WHERE r.name=? AND d.name=? AND r.request_id = p.request_id AND p.doc_id = d.doc_id";
+          + "WHERE r.req_name=? AND d.doc_name=? "
+          + "AND r.request_id = p.request_id AND p.doc_id = d.doc_id";
+    
+    private static final String DELETE_TABLE = 
+            "DELETE FROM PERTINENCE";
     
     private final DocumentDAO documentDAO;
     private final RequestDAO requestDAO;
@@ -38,11 +42,14 @@ public class PertinenceDAOImpl implements PertinenceDAO{
     public void createPertinence(PertinenceBean pertinence) {
         int docID = documentDAO.readDocumentByName(pertinence.getDocumentName()).getId();
         int requestID = requestDAO.readRequestByName(pertinence.getRequest()).getId();
-        DAOUtilities.executeCreate(PERTINENCE_CREATE, docID, requestID);
+        DAOUtilities.executeCreate(PERTINENCE_CREATE,
+                                   docID,
+                                   requestID,
+                                   pertinence.getPertinence());
     }
 
     public PertinenceBean readPertinence(String requestName, String filename) {
-        
+        System.out.println("request : " + requestName + " filename : " + filename);
         ResultSet rs = DAOUtilities.executeQuery(READ_PERTINENCE, requestName, filename);
         PertinenceBean pertinence = null;
         try {
@@ -57,10 +64,15 @@ public class PertinenceDAOImpl implements PertinenceDAO{
     
     private PertinenceBean map(ResultSet rs)throws SQLException{
         PertinenceBean pertinence = new PertinenceBean();
-        pertinence.setDocumentName(rs.getString("d.name"));
-        pertinence.setRequest(rs.getString("r.name"));
+        pertinence.setDocumentName(rs.getString("doc_name"));
+        pertinence.setRequest(rs.getString("req_name"));
         pertinence.setPertinence(rs.getInt("pertinence"));
         return pertinence;
     }
+    
+    public void deleteTable() {
+        DAOUtilities.executeDelete(DELETE_TABLE);
+    }
+
     
 }

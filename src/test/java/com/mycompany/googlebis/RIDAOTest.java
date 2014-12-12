@@ -108,6 +108,12 @@ public class RIDAOTest {
         
     }
     
+    @Test
+    public void retrievePertinence() {
+        
+    }
+    
+    
     private void deleteWordReference(String word) {
         indexationDAO.deleteIndexationByWord(word);
         wordDAO.deleteWordByName(word);

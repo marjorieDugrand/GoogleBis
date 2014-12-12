@@ -14,6 +14,7 @@ import com.mycompany.googlebis.dao.IndexationDAO;
 import com.mycompany.googlebis.dao.PertinenceDAO;
 import com.mycompany.googlebis.dao.RequestDAO;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -25,7 +26,7 @@ import java.util.TreeSet;
 public class SearchDelegate {
     
     private SortedSet<IndexationBean> results;
-    private String requestText;
+    private String request;
     private final IndexationDAO indexationDAO;
     private final RequestDAO requestDAO;
     private final PertinenceDAO pertinenceDAO;
@@ -40,9 +41,12 @@ public class SearchDelegate {
     }
     
     public SortedSet<IndexationBean> recoverRequestDocument(String requestName)  {
-        requestText = requestDAO.readRequestByName(requestName).getText();
-        String[] importantWords = fileHandler.parseRequest(requestName);
+        System.out.println("delegate searching request " + requestName);
+        request = requestName;
+        String requestText = requestDAO.readRequestByName(requestName).getText();
+        List<String> importantWords = fileHandler.parseRequest(requestText);
         Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(importantWords);
+        System.out.println("delegate analysing documents");
         results = new TreeSet<IndexationBean>();
         for(String docName: documents.keySet()) {
             RelationBean relations = documents.get(docName);
@@ -63,7 +67,7 @@ public class SearchDelegate {
         double precision = 0;
         for(int i=0; i < precisionLevel && iterator.hasNext(); i++) {
             IndexationBean result = iterator.next();
-            PertinenceBean bean = pertinenceDAO.readPertinence(requestText, result.getDocumentName());
+            PertinenceBean bean = pertinenceDAO.readPertinence(request, result.getDocumentName());
             precision += bean.getPertinence();
         }
         return precision;

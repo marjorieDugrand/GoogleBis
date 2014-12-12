@@ -36,9 +36,18 @@ public class CorpusStoringDelegate {
     }
     
     public void storeCorpus() {
+        clearDatabase();
         storeDocumentCorpus();
         storeRequests();
         storePertinence();
+    }
+    
+    private void clearDatabase() {
+        pertinenceDAO.deleteTable();
+        indexationDAO.deleteTable();
+        wordDAO.deleteTable();
+        requestDAO.deleteTable();
+        documentDAO.deleteTable();
     }
     
     private void storeDocumentCorpus() {

@@ -23,4 +23,6 @@ public interface DocumentDAO {
     
     public void deleteDocumentByName(String name);
     
+    public void deleteTable();
+    
 }

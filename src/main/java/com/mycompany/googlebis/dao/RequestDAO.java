@@ -18,4 +18,6 @@ public interface RequestDAO {
     
     public RequestBean readRequestByName(String name);
     
+    public void deleteTable();
+    
 }

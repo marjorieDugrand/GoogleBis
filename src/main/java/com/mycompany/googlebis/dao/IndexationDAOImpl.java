@@ -11,7 +11,6 @@ import com.mycompany.googlebis.beans.RelationBean;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class IndexationDAOImpl implements IndexationDAO{
           + "VALUES (?,?,?)";
     
     private static final String READ_DOCUMENTS_BY_WORD_CONTAINED = 
-            "SELECT d.name, d.link, c.weight "
+            "SELECT d.doc_name, d.link, c.weight "
           + "FROM DOCUMENTS d, WORDS w, CONTAINEDIN c "
           + "WHERE w.word = ? "
           + "AND c.word_id = w.word_id "
@@ -48,6 +47,9 @@ public class IndexationDAOImpl implements IndexationDAO{
             "DELETE FROM CONTAINEDIN "
           + "WHERE word_id = ?";
     
+    private static final String DELETE_TABLE = 
+            "DELETE FROM CONTAINEDIN";
+    
     private final WordDAO wordDAO;
     private final DocumentDAO documentDAO;
     
@@ -55,13 +57,13 @@ public class IndexationDAOImpl implements IndexationDAO{
         wordDAO = new WordDAOImpl();
         documentDAO = new DocumentDAOImpl();
     }
-    public Map<String,RelationBean> getDocumentCorrespondingToWords(String[] words) {
+    public Map<String,RelationBean> getDocumentCorrespondingToWords(List<String> words) {
         Map<String, RelationBean> results = new HashMap<String, RelationBean>();
         for(String word: words) {
             ResultSet rs = DAOUtilities.executeQuery(READ_DOCUMENTS_BY_WORD_CONTAINED, word);
             try {
                 while(rs.next()) {
-                    String documentName = rs.getString("name");
+                    String documentName = rs.getString("doc_name");
                     IndexationBean wordIndexation = new IndexationBean();
                     wordIndexation.setDocumentName(documentName);
                     wordIndexation.setDocumentLink(rs.getString("link"));
@@ -133,5 +135,9 @@ public class IndexationDAOImpl implements IndexationDAO{
         } catch(NullPointerException exc) {
             
         }
+    }
+
+    public void deleteTable() {
+        DAOUtilities.executeDelete(DELETE_TABLE);
     }
 }

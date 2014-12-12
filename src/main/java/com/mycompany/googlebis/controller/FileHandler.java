@@ -32,8 +32,8 @@ import org.jsoup.select.Elements;
  */
 public class FileHandler {
     
-    //private static final String DIRECTORY = "D:\\RI\\";
-    private static final String DIRECTORY = "/media/data/RI/";
+    private static final String DIRECTORY = "D:\\RI\\";
+   // private static final String DIRECTORY = "/media/data/RI/";
     private static final String DOCUMENTSREPOSITORY = DIRECTORY + "corpus_test";
     private static final File STOPLISTFILE = new File(DIRECTORY + "stopliste.txt") ;
     private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
@@ -145,7 +145,7 @@ public class FileHandler {
                 
                 request.setId(i);
                 request.setName(requestNames.get(i).text()) ;
-                request.setText(requestKeyWords.get(i).text()) ;
+                request.setText(requestKeyWords.get(i).text().toLowerCase()) ;
                 
                 requestBeans.add(request) ;
             }
@@ -161,11 +161,21 @@ public class FileHandler {
     /**
      * Parse the request key words to recover the important words that define the request
      * @author David 
+     * @param request
      * @return String list
      */
-    public String[] parseRequest(String request){
+    public List<String> parseRequest(String request){
         String regexp = ", " ;
-        return request.split(regexp) ;
+        List<String> importantWords = new ArrayList<String>();
+        for(String word: request.split(regexp)) {
+            System.out.println("word " + word);
+            if(word.length() > 5) {
+                importantWords.add(word.substring(0,5));
+            } else {
+                importantWords.add(word);
+            }
+        }
+        return importantWords;
     }
     
     
@@ -198,12 +208,12 @@ public class FileHandler {
                 //qRelsLines.add(qRelsLine) ;
                 List<String> qRelsLines = Arrays.asList(qRelsLine.split(regexp)) ;
                 String name = qrels.getName() ;
-                List<String> fileName = Arrays.asList(name.split("\\.")) ;
-                
-                //System.out.println(qRelsLines.toString()) ;
+                String requestName = Arrays.asList(name.split("\\.")).get(0);
+                requestName = requestName.substring(requestName.indexOf("Q"));
+                System.out.println(qRelsLines.toString()) ;
                 PertinenceBean bean = new PertinenceBean();
                 
-                bean.setRequest(fileName.get(0));
+                bean.setRequest(requestName);
                 bean.setDocumentName(qRelsLines.get(0));
                 bean.setPertinence(StringToFloat(qRelsLines.get(1)));
                 qRels.add(bean);

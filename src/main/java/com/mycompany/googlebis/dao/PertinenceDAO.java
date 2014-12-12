@@ -18,4 +18,6 @@ public interface PertinenceDAO {
     
     public PertinenceBean readPertinence(String requestName, String filename);
     
+    public void deleteTable();
+    
 }
