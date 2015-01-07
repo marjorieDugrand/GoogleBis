@@ -20,4 +20,6 @@ public interface RequestDAO {
     
     public void deleteTable();
     
+    public void deleteRequestByName(String requestName);
+    
 }

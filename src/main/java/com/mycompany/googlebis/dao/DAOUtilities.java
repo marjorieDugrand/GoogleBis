@@ -24,33 +24,33 @@ public class DAOUtilities {
     private static final String urlBase = "jdbc:derby://localhost:1527/googleBis";
     private static final String username = "google";
     private static final String password = "google";
+    private static final String driver = "org.apache.derby.jdbc.ClientDriver";
     
-    private static Connection getConnection(){
-        String driver = "org.apache.derby.jdbc.ClientDriver";
-        Connection con = null;
-        try {
-            Class.forName(driver).newInstance();
-            con = DriverManager.getConnection(urlBase,username,password);
-        } catch (SQLException e1) {
-            throw new RuntimeException("connection problem", e1);
-        } catch (Exception e2) {
-            throw new RuntimeException("driver problem", e2);
+    private static Connection connection;
+    private static PreparedStatement preparedStatement;
+    
+    private static void initializeConnection(){
+        if(connection == null) {
+            try {
+                Class.forName(driver).newInstance();
+                connection = DriverManager.getConnection(urlBase,username,password);
+            } catch (SQLException e1) {
+                throw new RuntimeException("connection problem", e1);
+            } catch (Exception e2) {
+                throw new RuntimeException("driver problem", e2);
+            }
         }
-        return con;
     }
     
-    private static PreparedStatement initializePreparedStatement(Connection connection,
-                                                                String sqlRequest,
-                                                                boolean returnGeneratedKeys,
-                                                                Object... objects )
-            throws SQLException {
-        PreparedStatement preparedStatement
+    private static void initializePreparedStatement(String sqlRequest,
+                                                    boolean returnGeneratedKeys,
+                                                    Object... objects ) throws SQLException {
+        preparedStatement
                 = connection.prepareStatement(sqlRequest,
                                               getGeneratedKeyParameter(returnGeneratedKeys));
         for ( int i = 0; i < objects.length; i++ ) {
             preparedStatement.setObject( i + 1, objects[i] );
         }
-        return preparedStatement;
     }
 
     private static int getGeneratedKeyParameter(boolean returnGeneratedKeys) {
@@ -60,82 +60,42 @@ public class DAOUtilities {
             return Statement.NO_GENERATED_KEYS;
         }
     }
-    /**
-     * Close a ResultSet
-     * @param resultSet ResultSet that has to be closed
-     */
+
     public static void silentClose(ResultSet resultSet) {
         if ( resultSet != null ) {
             try {
+                preparedStatement.close();
                 resultSet.close();
             } catch ( SQLException e ) {
-                System.out.println( "Échec de la fermeture du ResultSet : " + e.getMessage() );
+                System.out.println( "Échec de la fermeture : " + e.getMessage() );
             }
         }
     }
 
-    /**
-     * Close a Statement
-     * @param statement Statement that has to be closed
-     */
-    private static void silentClose( Statement statement ) {
-        if ( statement != null ) {
-            try {
-                statement.close();
-            } catch ( SQLException e ) {
-                System.out.println( "Échec de la fermeture du Statement : " + e.getMessage() );
-            }
+    private static void silentClose() {
+        try {
+            preparedStatement.close();
+        } catch ( SQLException e ) {
+            System.out.println( "Échec de la fermeture : " + e.getMessage() );
         }
-    }
-
-    /**
-     * Close a Connection
-     * @param connection Connection that has to be closed
-     */
-    private static void silentClose( Connection connection ) {
-        if ( connection != null ) {
-            try {
-                connection.close();
-            } catch ( SQLException e ) {
-                System.out.println( "Échec de la fermeture de la connexion : " + e.getMessage() );
-            }
-        }
-    }
-
-    /**
-     * Silent closing of a Statement and a Connection
-     * @param statement Statement that has to be closed
-     * @param connection Connection that has to be closed
-     */
-    private static void silentClose( Statement statement, Connection connection ) {
-        silentClose( statement );
-        silentClose( connection );
     }
     
     public static ResultSet executeQuery(String sqlQuery, Object... parameters) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = getConnection();
-            preparedStatement =
-                    initializePreparedStatement(connection,sqlQuery,false,parameters);
+            initializeConnection();
+            initializePreparedStatement(sqlQuery,false,parameters);
             resultSet = preparedStatement.executeQuery();
         } catch (SQLException ex) {
                 Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            //silentClose(preparedStatement, connection);
         }
         return resultSet;
     }
     
     private static void executeUpdate(String sqlUpdate, boolean keyGenerated, Object... parameters) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         try {
-            connection = getConnection();
-            preparedStatement =
-                initializePreparedStatement(connection,sqlUpdate,keyGenerated,parameters);
+            initializeConnection();
+            initializePreparedStatement(sqlUpdate,keyGenerated,parameters);
             int statut = preparedStatement.executeUpdate();
             if ( statut == 0 ) {
                 throw new DAOException( "Update " + sqlUpdate + " failed, no line added in database." );
@@ -143,7 +103,7 @@ public class DAOUtilities {
         } catch (SQLException ex) {
                 throw new DAOException(ex);
         } finally {
-            silentClose(preparedStatement, connection);
+            silentClose();
         }
     }
     

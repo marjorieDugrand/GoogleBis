@@ -30,6 +30,10 @@ public class RequestDAOImpl implements RequestDAO{
     private static final String DELETE_TABLE = 
             "DELETE FROM REQUESTS";
     
+    private static final String DELETE_FROM_NAME = 
+            "DELETE FROM REQUESTS "
+          + "WHERE req_name=?";
+    
     public void createRequest(RequestBean request) {
         DAOUtilities.executeCreate(REQUEST_CREATE, request.getName(), request.getText());
     }
@@ -44,6 +48,8 @@ public class RequestDAOImpl implements RequestDAO{
             }
         } catch (SQLException ex) {
             Logger.getLogger(DocumentDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DAOUtilities.silentClose(rs);
         }
         return request;
     }
@@ -59,5 +65,8 @@ public class RequestDAOImpl implements RequestDAO{
     public void deleteTable() {
         DAOUtilities.executeDelete(DELETE_TABLE);
     }
-    
+
+    public void deleteRequestByName(String requestName) {
+        DAOUtilities.executeDelete(DELETE_FROM_NAME, requestName);
+    }
 }

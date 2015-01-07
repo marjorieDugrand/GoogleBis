@@ -1,12 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.mycompany.googlebis.FileHandlerTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.369 sec <<< FAILURE!
-parseDocumentTest(com.mycompany.googlebis.FileHandlerTest)  Time elapsed: 0.037 sec  <<< ERROR!
-java.lang.NullPointerException: null
-	at com.mycompany.googlebis.FileHandlerTest.parseDocumentTest(FileHandlerTest.java:35)
-
-parseQRelsTest(com.mycompany.googlebis.FileHandlerTest)  Time elapsed: 0 sec  <<< ERROR!
-java.lang.NullPointerException: null
-	at com.mycompany.googlebis.FileHandlerTest.parseQRelsTest(FileHandlerTest.java:84)
-
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.763 sec

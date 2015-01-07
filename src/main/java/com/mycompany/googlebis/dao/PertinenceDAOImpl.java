@@ -31,6 +31,10 @@ public class PertinenceDAOImpl implements PertinenceDAO{
     private static final String DELETE_TABLE = 
             "DELETE FROM PERTINENCE";
     
+    private static final String DELETE_PERTINENCE = 
+            "DELETE FROM PERTINENCE "
+          + "WHERE request_id=? AND doc_id=?";
+    
     private final DocumentDAO documentDAO;
     private final RequestDAO requestDAO;
     
@@ -58,6 +62,8 @@ public class PertinenceDAOImpl implements PertinenceDAO{
             }
         } catch (SQLException ex) {
             Logger.getLogger(DocumentDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DAOUtilities.silentClose(rs);
         }
         return pertinence;
     }
@@ -66,12 +72,18 @@ public class PertinenceDAOImpl implements PertinenceDAO{
         PertinenceBean pertinence = new PertinenceBean();
         pertinence.setDocumentName(rs.getString("doc_name"));
         pertinence.setRequest(rs.getString("req_name"));
-        pertinence.setPertinence(rs.getInt("pertinence"));
+        pertinence.setPertinence(rs.getDouble("pertinence"));
         return pertinence;
     }
     
     public void deleteTable() {
         DAOUtilities.executeDelete(DELETE_TABLE);
+    }
+    
+    public void deletePertinence(String requestName, String filename) {
+        int docId = documentDAO.readDocumentByName(filename).getId();
+        int requestId = requestDAO.readRequestByName(requestName).getId();
+        DAOUtilities.executeDelete(DELETE_PERTINENCE, requestId, docId);
     }
 
     

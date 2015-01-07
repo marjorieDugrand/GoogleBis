@@ -76,6 +76,8 @@ public class IndexationDAOImpl implements IndexationDAO{
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(IndexationDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                DAOUtilities.silentClose(rs);
             }
         }
         return results;

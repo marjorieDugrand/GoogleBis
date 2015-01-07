@@ -39,6 +39,29 @@ public class FileHandler {
     private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
     private static final String QRELSREPOSITORY = DIRECTORY + "qrels" ;
     
+    private static final int tailleMots = 5 ;
+    
+    private List<String> stopList;
+    
+    public FileHandler() {
+        parseStopList();
+    }
+    
+    private void parseStopList() {
+        stopList = new ArrayList<String>();
+        try {
+            FileInputStream stopListFileInput = new FileInputStream(STOPLISTFILE);
+            BufferedReader stopListBufferedReader = new BufferedReader(new InputStreamReader(stopListFileInput));
+            String stopWord ;
+            while ((stopWord = stopListBufferedReader.readLine()) != null) {
+                stopList.add(stopWord) ;
+            }
+            stopListFileInput.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public File[] getCorpusList() {
         return getDirectoryFiles(DOCUMENTSREPOSITORY);
     }
@@ -59,57 +82,54 @@ public class FileHandler {
      * @return 
      */
     public Map<String,Integer> parseDocument(File document) {
-        
-        HashMap<String, Integer> wordMap = new HashMap<String, Integer>() ;
-        ArrayList stopList = new ArrayList() ;
-        Integer i ;
-        int tailleMots = 5 ;
-        String regexp;
-        regexp = "\\s+|'|\\(|\\.|&|[0-9]|\"|\\-|\\:|\\?|\\||\\)|\\,|\\/|\\«|@|\\!|\\+|\\>";
-
+        Map<String, Integer> wordMap = new HashMap<String, Integer>() ;
         try {
-            FileInputStream stopListFileInput ;
-            stopListFileInput = new FileInputStream(STOPLISTFILE);
-            BufferedReader stopListBufferedReader = new BufferedReader(new InputStreamReader(stopListFileInput));
-            String stopWord ;
-
-            while ((stopWord = stopListBufferedReader.readLine()) != null) {
-                stopList.add(stopWord) ;
-            }
-            stopListFileInput.close();
-
-            //System.out.println(stopList.toString());
-
-            Document doc = Jsoup.parse(document, "UTF-8");
-            String text = doc.body().text() ;
-            String[] words = text.split(regexp);
-
+            String[] words = getDocumentImportantWords(document);
             for (String word : words) {
-
+                System.out.println("word recovered : " + word);
                 String wordLC = word.toLowerCase() ;
                 if (!(stopList.contains(wordLC))) {
-                    
-                    if (wordLC.length() >= tailleMots)
-                        wordLC = wordLC.substring(0, tailleMots);
-                    if (!(wordMap.containsKey(wordLC))) {
-                        wordMap.put(wordLC, 1) ;
-                    } else {
-                        i = (Integer) wordMap.get(wordLC) + 1 ;
-                        wordMap.put(wordLC, i) ;
-                    }
+                    wordLC = cutWordAtAppropriateSize(wordLC);
+                    addWordInMap(wordMap, wordLC);
                 }
             }
             System.out.println("nb mots :" + wordMap.size()) ;
-
-        
-        
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FileHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return wordMap;
+    }
+    
+    private String cutWordAtAppropriateSize(String word) {
+        String cutWord;
+        if(word.length() >= tailleMots) {
+            cutWord= word.substring(0, tailleMots);
+        } else {
+            cutWord = word;
+        }
+        return cutWord;
+    }
+    
+    private void addWordInMap(Map<String, Integer> map, String word) {
+         if (!(map.containsKey(word))) {
+             map.put(word, 1) ;
+         } else {
+             Integer weight = map.get(word) + 1 ;
+             map.put(word, weight) ;
+         }
+    }
+    
+    private String[] getDocumentImportantWords(File document) throws IOException {
+        String regexp = "[\\s!\"?;()&\':\\.,’0-9_@\\\\«»-]+";
+        //String regexp = "\\s+|('\\s*)|\\(|\\.|&|[0-9]|\"|\\-|\\:|\\?|\\||\\)|\\,|\\/|\\«|@|\\!|\\+|\\>";
+        System.out.println("parsing document : " + document.getName());
+        Document doc = Jsoup.parse(document, "UTF-8");
+        
+        String text = doc.select("meta[name=description]").attr("content");
+        text += " " + doc.select("meta[name=keywords]").attr("content");
+        //text += doc.select("title").text();
+        System.out.println("text recovered : " + text);
+        return text.split(regexp);
     }
     
     /**

@@ -57,6 +57,8 @@ public class DocumentDAOImpl implements DocumentDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DAOUtilities.silentClose(resultSet);
         }
         return document;
     }

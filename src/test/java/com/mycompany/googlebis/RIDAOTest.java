@@ -8,6 +8,8 @@ package com.mycompany.googlebis;
 
 import com.mycompany.googlebis.beans.*;
 import com.mycompany.googlebis.dao.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import org.junit.After;
@@ -23,12 +25,16 @@ public class RIDAOTest {
     private IndexationDAO indexationDAO;
     private DocumentDAO documentDAO;
     private WordDAO wordDAO;
+    private RequestDAO requestDAO;
+    private PertinenceDAO pertinenceDAO;
     
     @Before
     public void setUp() {
         indexationDAO = new IndexationDAOImpl();
         documentDAO = new DocumentDAOImpl();
         wordDAO = new WordDAOImpl();
+        requestDAO = new RequestDAOImpl();
+        pertinenceDAO = new PertinenceDAOImpl();
     }
     
     @After
@@ -39,7 +45,7 @@ public class RIDAOTest {
     public void nothingInDatabaseNothingRetrieved() {
         deleteWordReference("apple");
         deleteWordReference("peach");
-        String[] keywords = {"apple","peach"};
+        List<String> keywords = createKeywordsList("apple","peach");
         Map<String,RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
         assertEquals(documents.size(),0);
     }
@@ -49,11 +55,18 @@ public class RIDAOTest {
         createDocument("doc1", "c:documents/doc1");
         createWord("apple");
         createIndexation("apple", "doc1", 1);
-        
-        String[] keywords = {"apple","peach"};
+        List<String> keywords = createKeywordsList("apple","peach");
         Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
         assertEquals(1, documents.size());
         assertEquals(1, documents.get("doc1").getIndexationsSize());
+    }
+    
+    private List<String> createKeywordsList(String... keywords) {
+        List<String> keywordsList = new ArrayList<String>();
+        for(int i=0; i < keywords.length; i++) {
+            keywordsList.add(keywords[i]);
+        }
+        return keywordsList;
     }
     
     @Test
@@ -64,7 +77,7 @@ public class RIDAOTest {
         createIndexation("apple", "doc1", 1);
         createIndexation("apple", "doc2", 3);
         
-        String[] keywords = {"apple","peach"};
+        List<String> keywords = createKeywordsList("apple","peach");
         Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
         assertEquals(2, documents.size());
         assertEquals(1, documents.get("doc2").getIndexationsSize());
@@ -79,7 +92,7 @@ public class RIDAOTest {
         createIndexation("apple", "doc1", 2);
         createIndexation("peach", "doc1", 1);
         
-        String[] keywords = {"apple","peach"};
+        List<String> keywords = createKeywordsList("apple","peach");
         Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(keywords);
         assertEquals(1, documents.size());
         assertEquals(2, documents.get("doc1").getIndexationsSize());
@@ -97,8 +110,8 @@ public class RIDAOTest {
         createIndexation("fenêtre", "doc2", 2);
         createIndexation("noël", "doc1", 1);
         
-        String[] keywords1 = {"élève","fenêtre", "noël"};
-        String[] keywords2 = {"ça"};
+        List<String> keywords1 = createKeywordsList("élève","fenêtre", "noël");
+        List<String> keywords2 = createKeywordsList("ça");
         Map<String, RelationBean> documents1 = indexationDAO.getDocumentCorrespondingToWords(keywords1);
         Map<String, RelationBean> documents2 = indexationDAO.getDocumentCorrespondingToWords(keywords2);
         assertEquals(2, documents1.size());
@@ -110,9 +123,38 @@ public class RIDAOTest {
     
     @Test
     public void retrievePertinence() {
-        
+        createDocument("doc1", "c:/documents/doc1");
+        createDocument("doc2", "c:/documents/doc2");
+        createDocument("doc3", "c:/documents/doc3");
+        createWords("élève","ça","fenêtre","noël");
+        createIndexation("élève", "doc1", 2);
+        createIndexation("ça", "doc2", 1);
+        createIndexation("fenêtre", "doc1", 2);
+        createIndexation("fenêtre", "doc2", 2);
+        createIndexation("noël", "doc1", 1);
+        createRequest("r1","ça noël");
+        createPertinence("r1", "doc1", 1.0);
+        createPertinence("r1", "doc2", 0.5);
+        assertEquals(1.0,pertinenceDAO.readPertinence("r1", "doc1").getPertinence()); 
+        assertEquals(0.5,pertinenceDAO.readPertinence("r1", "doc2").getPertinence()); 
     }
     
+    private void createRequest(String requestName, String request) {
+        requestDAO.deleteRequestByName(requestName);
+        RequestBean requestBean = new RequestBean();
+        requestBean.setName(requestName);
+        requestBean.setText(request);
+        requestDAO.createRequest(requestBean);
+    }
+    
+    private void createPertinence(String request, String document, double pertinence) {
+       pertinenceDAO.deletePertinence(request, document);
+       PertinenceBean pertinenceBean = new PertinenceBean();
+       pertinenceBean.setDocumentName(document);
+       pertinenceBean.setRequest(request);
+       pertinenceBean.setPertinence(pertinence);
+       pertinenceDAO.createPertinence(pertinenceBean);
+    }
     
     private void deleteWordReference(String word) {
         indexationDAO.deleteIndexationByWord(word);

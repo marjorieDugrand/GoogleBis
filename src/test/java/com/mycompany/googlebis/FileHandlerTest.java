@@ -13,7 +13,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
+import org.junit.Ignore;
 
 /**
  *
@@ -25,21 +29,85 @@ public class FileHandlerTest {
     
     
     @Test
-    public void parseDocumentTest () {
-        
+    public void parseDocument1Test () {
         File[] documents = fileHandler.getCorpusList() ;
-        HashMap<String, Integer> wordMap = new HashMap<String, Integer>() ;
-        
-        System.out.println("parse document test :");
-        
-        for (File document : documents) {
-            wordMap = (HashMap<String, Integer>) fileHandler.parseDocument(document) ;
-        }
-        
-        System.out.println(wordMap.toString());
+        Map<String, Integer> wordMap = fileHandler.parseDocument(documents[0]) ;      
+        Map<String,Integer> mapTest = createMapTestForDoc1();
+        assertEquals(mapTest,wordMap);
     }
     
+    private Map<String,Integer> createMapTestForDoc1() {
+        Map<String, Integer> docMap = new HashMap<String, Integer> ();
+        docMap.put("intou", 3);
+        docMap.put("casti", 2);
+        docMap.put("com", 2);
+        docMap.put("toutl", 2);
+        docMap.put("acteu", 2);
+        docMap.put("techn", 1);
+        docMap.put("équip", 1);
+        docMap.put("ensem", 1);
+        docMap.put("réali", 1);
+        docMap.put("détai", 1);
+        docMap.put("consu", 1);
+        return docMap;
+    }
+
     @Test
+    public void parseDocument10Test() {
+        File document = new File("D:\\RI\\corpus_test\\D10.html");
+        Map<String, Integer> wordMap = fileHandler.parseDocument(document) ;
+        Map<String, Integer> mapTest = createMapForDocument10();
+        assertEquals(mapTest,wordMap);
+        assertEquals(12, wordMap.size());
+    }
+
+    @Test
+    public void parseDocument3Test() {
+        File document = new File("D:\\RI\\corpus_test\\D3.html");
+        Map<String, Integer> wordMap = fileHandler.parseDocument(document) ;
+        Map<String, Integer> mapTest = createMapForDocument3();
+        assertEquals(mapTest,wordMap);
+    }
+    
+    
+    private Map<String,Integer> createMapForDocument10() {
+        Map<String,Integer> mapTest = new HashMap<String, Integer>();
+        mapTest.put("noire", 1);
+        mapTest.put("condé", 1);
+        mapTest.put("dossi", 1);
+        mapTest.put("génér", 1);
+        mapTest.put("avoca", 1);
+        mapTest.put("avis", 1);
+        mapTest.put("paris", 1);
+        mapTest.put("novem", 1);
+        mapTest.put("prote", 1);
+        mapTest.put("enten", 1);
+        mapTest.put("amian", 1);
+        mapTest.put("victi", 1);
+        return mapTest;
+    }
+    
+    private Map<String,Integer> createMapForDocument3() {
+        Map<String,Integer> map3 = new HashMap<String,Integer>();
+        map3.put("intou",1);
+        map3.put("film",1);
+        map3.put("triom",1);
+        map3.put("porté",1);
+        map3.put("franç",1);
+        map3.put("ciném",1);
+        map3.put("compt",1);
+        map3.put("acteu",1);
+        map3.put("parti",1);
+        map3.put("sy",1);
+        map3.put("omar",1);
+        map3.put("testo",1);
+        map3.put("fred",1);
+        map3.put("tande",1);
+        map3.put("conna",1);
+        return map3;
+    }
+    
+    @Test @Ignore
     public void parseFileRequestTest () {
         ArrayList requests = new ArrayList() ;
         
@@ -49,7 +117,7 @@ public class FileHandlerTest {
     }
     
     
-    @Test
+    @Test @Ignore
     public void parseRequestTest() {
         
         System.out.println("\nTest parse request :\n");
@@ -66,15 +134,15 @@ public class FileHandlerTest {
         }
         
         for (int i=0 ; i<keyWords.size() ; i++) {
-            String[] keyWordsRequest = fileHandler.parseRequest(keyWords.get(i)) ;
+            List<String> keyWordsRequest = fileHandler.parseRequest(keyWords.get(i)) ;
             
-            for (int j=0 ; j<keyWordsRequest.length ; j++) {
-                System.out.println(keyWordsRequest[j]);
+            for (String keyWord:keyWordsRequest) {
+                System.out.println(keyWord);
             }
         }
     }
     
-    @Test
+    @Test @Ignore
     public void parseQRelsTest () {
         
         File[] qRelsFiles = fileHandler.getQRels();

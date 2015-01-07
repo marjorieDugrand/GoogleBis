@@ -29,19 +29,21 @@ public class WordDAOImpl implements WordDAO {
             "DELETE FROM WORDS";
     
     public void createWord(WordBean word) {
-        System.out.println(word.getWord());
         DAOUtilities.executeCreate(WORD_CREATE, word.getWord());
     }
 
     public WordBean readWordByName(String name) {
         WordBean word = null;
+        ResultSet resultSet = null;
         try {
-            ResultSet resultSet = DAOUtilities.executeQuery(WORD_READ, name);
+            resultSet = DAOUtilities.executeQuery(WORD_READ, name);
             if (resultSet != null && resultSet.next() ) {
                 word = map(resultSet);
             }
         } catch (SQLException ex) {
             Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DAOUtilities.silentClose(resultSet);
         }
         return word;
     }

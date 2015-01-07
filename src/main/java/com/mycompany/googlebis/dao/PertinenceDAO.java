@@ -20,4 +20,5 @@ public interface PertinenceDAO {
     
     public void deleteTable();
     
+    public void deletePertinence(String requestName, String filename);
 }
