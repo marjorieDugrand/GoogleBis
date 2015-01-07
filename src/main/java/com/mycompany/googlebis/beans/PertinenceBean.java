@@ -39,5 +39,16 @@ public class PertinenceBean {
     public void setPertinence(double pertinence) {
         this.pertinence = pertinence;
     }
+      
+    @Override
+    public boolean equals(Object o) {
+        if(o.getClass() == PertinenceBean.class) {
+            PertinenceBean aux = (PertinenceBean) o;
+            return documentName.equals(aux.getDocumentName())
+                && request.equals(aux.getRequest())
+                && pertinence == aux.getPertinence();
+        }
+        return false;
+    }
     
 }

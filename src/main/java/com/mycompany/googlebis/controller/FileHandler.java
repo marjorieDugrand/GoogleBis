@@ -39,6 +39,9 @@ public class FileHandler {
     private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
     private static final String QRELSREPOSITORY = DIRECTORY + "qrels" ;
     
+    private static final String documentRegexp = "[\\s!\"?;()&\':\\.,’_@\\\\«»-]+";
+    private static final String requestRegexp = "[\\s,]+";
+    
     private static final int tailleMots = 5 ;
     
     private List<String> stopList;
@@ -120,53 +123,33 @@ public class FileHandler {
     }
     
     private String[] getDocumentImportantWords(File document) throws IOException {
-        String regexp = "[\\s!\"?;()&\':\\.,’0-9_@\\\\«»-]+";
         //String regexp = "\\s+|('\\s*)|\\(|\\.|&|[0-9]|\"|\\-|\\:|\\?|\\||\\)|\\,|\\/|\\«|@|\\!|\\+|\\>";
-        System.out.println("parsing document : " + document.getName());
         Document doc = Jsoup.parse(document, "UTF-8");
-        
         String text = doc.select("meta[name=description]").attr("content");
         text += " " + doc.select("meta[name=keywords]").attr("content");
         //text += doc.select("title").text();
         System.out.println("text recovered : " + text);
-        return text.split(regexp);
+        return text.split(documentRegexp);
     }
     
     /**
      * Parse the requests file to recover the important words that define each request
      * @author David 
-     * @return ArrayListRequestBean
+     * @return ListRequestBean
      */
-    public ArrayList<RequestBean> parseFileRequest() { 
+    public List<RequestBean> parseFileRequest() { 
         
-        ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
-        String baliseH2 = "h2" ;
-        String baliseDL = "dl" ;
-        String baliseDD = "dd" ;
+        List<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
 
         try {
-            Document doc;
-                doc = Jsoup.parse(REQUESTFILE, "UTF-8");
-
-            Elements requestNames = doc.select(baliseH2) ;
-            Elements requestTexts = doc.select(baliseDL) ;
-            Elements requestKeyWords = new Elements();
-
-            /*
-            System.out.println("nb h2 element : " + requestNames.size()) ;
-            System.out.println("nb dl element : " + requestTexts.size()) ;
-            */
+            Document doc = Jsoup.parse(REQUESTFILE, "UTF-8");
+            Elements requestNames = getRequestsName(doc) ;
+            Elements requestTexts = getRequestsText(doc);
             
             for (int i = 0 ; i<requestTexts.size() ; i++) {
                 RequestBean request = new RequestBean() ;
-                
-                Element e=requestTexts.get(i);
-                requestKeyWords.add(e.select(baliseDD).first());
-                
-                request.setId(i);
                 request.setName(requestNames.get(i).text()) ;
-                request.setText(requestKeyWords.get(i).text().toLowerCase()) ;
-                
+                request.setText(requestTexts.get(i).text().toLowerCase()) ;
                 requestBeans.add(request) ;
             }
         
@@ -178,6 +161,23 @@ public class FileHandler {
         
     }
     
+    private Elements getRequestsName(Document doc) {
+       String baliseNames = "h2" ;
+       return doc.select(baliseNames); 
+    }
+    
+    private Elements getRequestsText(Document doc) {
+        String baliseDL = "dl" ;
+        String baliseDD = "dd" ;
+        Elements requestTexts = doc.select(baliseDL) ;
+        Elements requestKeyWords = new Elements();
+            
+        for (Element element: requestTexts) {
+            requestKeyWords.add(element.select(baliseDD).first());
+        }
+        return requestKeyWords;
+    }
+    
     /**
      * Parse the request key words to recover the important words that define the request
      * @author David 
@@ -185,14 +185,11 @@ public class FileHandler {
      * @return String list
      */
     public List<String> parseRequest(String request){
-        String regexp = ", " ;
         List<String> importantWords = new ArrayList<String>();
-        for(String word: request.split(regexp)) {
-            System.out.println("word " + word);
-            if(word.length() > 5) {
-                importantWords.add(word.substring(0,5));
-            } else {
-                importantWords.add(word);
+        for(String word: request.split(requestRegexp)) {
+            if (!(stopList.contains(word))) {
+                    word = cutWordAtAppropriateSize(word);
+                    importantWords.add(word);
             }
         }
         return importantWords;

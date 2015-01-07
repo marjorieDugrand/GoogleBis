@@ -40,4 +40,14 @@ public class RequestBean {
         this.id = id;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        if(o.getClass() == RequestBean.class) {
+            RequestBean aux = (RequestBean) o;
+            return name.equals(aux.getName())
+                && text.equals(aux.getText())
+                && aux.getId() == id;
+        }
+        return false;
+    }
 }

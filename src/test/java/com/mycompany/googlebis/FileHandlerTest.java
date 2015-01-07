@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.*;
 import org.junit.Ignore;
 
 /**
@@ -58,7 +58,7 @@ public class FileHandlerTest {
         Map<String, Integer> wordMap = fileHandler.parseDocument(document) ;
         Map<String, Integer> mapTest = createMapForDocument10();
         assertEquals(mapTest,wordMap);
-        assertEquals(12, wordMap.size());
+        assertEquals(13, wordMap.size());
     }
 
     @Test
@@ -80,6 +80,7 @@ public class FileHandlerTest {
         mapTest.put("avis", 1);
         mapTest.put("paris", 1);
         mapTest.put("novem", 1);
+        mapTest.put("6", 1); 
         mapTest.put("prote", 1);
         mapTest.put("enten", 1);
         mapTest.put("amian", 1);
@@ -107,53 +108,96 @@ public class FileHandlerTest {
         return map3;
     }
     
-    @Test @Ignore
+    @Test
     public void parseFileRequestTest () {
-        ArrayList requests = new ArrayList() ;
-        
-        //System.out.println("\nTest parse file request :\n");
-        
-        requests = fileHandler.parseFileRequest() ;
+        List<RequestBean> requests = fileHandler.parseFileRequest();
+        List<RequestBean> testRequests = createExpectedRequests();
+        assertEquals(testRequests.size(), requests.size());
+        for(int i=0; i < testRequests.size(); i++) {
+           assertEquals(testRequests.get(i).getName(), requests.get(i).getName());
+           assertEquals(testRequests.get(i).getText(), requests.get(i).getText());
+        }
     }
     
+    private List<RequestBean> createExpectedRequests() {
+        List<RequestBean> req = new ArrayList<RequestBean>();
+        req.add(createRequestBean("Q1", "personnes, intouchables"));
+        req.add(createRequestBean("Q2", "lieu, naissance, omar sy"));
+        req.add(createRequestBean("Q3", "personnes, recompensées, intouchables"));
+        req.add(createRequestBean("Q4", "palmarès, globes de cristal, 2012"));
+        req.add(createRequestBean("Q5", "membre, jury, globes de cristal, 2012"));
+        req.add(createRequestBean("Q6", "prix, omar sy, globes de cristal, 2012"));  
+        req.add(createRequestBean("Q7", "lieu, globes cristal, 2012"));
+        req.add(createRequestBean("Q8", "prix, omar sy"));
+        req.add(createRequestBean("Q9", "acteurs, joué avec, omar sy"));
+        return req;
+    }
     
-    @Test @Ignore
+    private RequestBean createRequestBean(String name, String text) {
+        RequestBean bean = new RequestBean();
+        bean.setName(name);
+        bean.setText(text);
+        return bean;
+    }
+    
+    @Test
     public void parseRequestTest() {
+        List<RequestBean> requests = fileHandler.parseFileRequest();
+        List<String> keyWords = fileHandler.parseRequest(requests.get(5).getText()) ;
+        List<String> expectedKeywords = new ArrayList<String>();
+        expectedKeywords.add("prix");
+        expectedKeywords.add("omar");
+        expectedKeywords.add("sy");
+        expectedKeywords.add("globe");
+        expectedKeywords.add("crist");
+        expectedKeywords.add("2012");
+        assertEquals(expectedKeywords, keyWords);
+    }
+    
+    @Test
+    public void parseQRelsTest () {       
+
+        List<PertinenceBean> qrels = fileHandler.parseQRelsForRequest(new File("D:\\RI\\qrels\\qrel_testQ1.txt")) ;
+        List<PertinenceBean> expectedQrels = new ArrayList<PertinenceBean>();
         
-        System.out.println("\nTest parse request :\n");
-        
-        ArrayList<RequestBean> requestBeans = new ArrayList<RequestBean>() ;
-        ArrayList<String> keyWords = new ArrayList<String> () ;
-        
-        requestBeans = fileHandler.parseFileRequest() ;
-        
-        for (int i=0 ; i<requestBeans.size() ; i++) {
-            keyWords.add(requestBeans.get(i).getText()) ;
-            
-            System.out.println(requestBeans.get(i).getText()) ;
-        }
-        
-        for (int i=0 ; i<keyWords.size() ; i++) {
-            List<String> keyWordsRequest = fileHandler.parseRequest(keyWords.get(i)) ;
-            
-            for (String keyWord:keyWordsRequest) {
-                System.out.println(keyWord);
-            }
+        expectedQrels.add(createPertinenceBean("Q1", "D1.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D2.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D3.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D4.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D5.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D6.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D7.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D8.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D9.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D10.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D11.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D12.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D13.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D14.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D15.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D16.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D17.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D18.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D19.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D20.html", 0.5));
+        expectedQrels.add(createPertinenceBean("Q1", "D21.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D22.html", 1));
+        expectedQrels.add(createPertinenceBean("Q1", "D23.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D24.html", 0));
+        expectedQrels.add(createPertinenceBean("Q1", "D25.html", 0));
+
+        assertEquals(expectedQrels.size(), qrels.size());
+        for (int i=0; i < qrels.size(); i++) {
+            assertTrue(expectedQrels.get(i).equals(qrels.get(i)));
         }
     }
     
-    @Test @Ignore
-    public void parseQRelsTest () {
-        
-        File[] qRelsFiles = fileHandler.getQRels();
-        
-        System.out.println("\nParse qrels test :\n");
-        
-        List<PertinenceBean> qrels = fileHandler.parseQRelsForRequest(qRelsFiles[0]) ;
-        
-        for (PertinenceBean qrel : qrels) {
-            System.out.println(qrel.getRequest() + " : " + qrel.getDocumentName() + "->" + qrel.getPertinence());
-        }
+    private PertinenceBean createPertinenceBean(String request, String file, double pertinence) {
+        PertinenceBean bean = new PertinenceBean();
+        bean.setDocumentName(file);
+        bean.setRequest(request);
+        bean.setPertinence(pertinence);
+        return bean;
     }
     
 }
