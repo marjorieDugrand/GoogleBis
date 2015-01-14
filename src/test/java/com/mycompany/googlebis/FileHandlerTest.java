@@ -15,14 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
-
 import static junit.framework.Assert.*;
-import org.junit.Ignore;
 
-/**
- *
- * @author david
- */
 public class FileHandlerTest {
     
     private final FileHandler fileHandler = new FileHandler();
@@ -38,13 +32,13 @@ public class FileHandlerTest {
     
     private Map<String,Integer> createMapTestForDoc1() {
         Map<String, Integer> docMap = new HashMap<String, Integer> ();
-        docMap.put("intou", 3);
-        docMap.put("casti", 2);
-        docMap.put("com", 2);
-        docMap.put("toutl", 2);
-        docMap.put("acteu", 2);
-        docMap.put("techn", 1);
-        docMap.put("équip", 1);
+        docMap.put("com", 3);
+        docMap.put("toutl", 3);
+        docMap.put("techn", 2);
+        docMap.put("équip", 2);
+        docMap.put("acteu", 3);
+        docMap.put("intou", 4);
+        docMap.put("casti", 3);
         docMap.put("ensem", 1);
         docMap.put("réali", 1);
         docMap.put("détai", 1);
@@ -58,7 +52,6 @@ public class FileHandlerTest {
         Map<String, Integer> wordMap = fileHandler.parseDocument(document) ;
         Map<String, Integer> mapTest = createMapForDocument10();
         assertEquals(mapTest,wordMap);
-        assertEquals(13, wordMap.size());
     }
 
     @Test
@@ -72,6 +65,10 @@ public class FileHandlerTest {
     
     private Map<String,Integer> createMapForDocument10() {
         Map<String,Integer> mapTest = new HashMap<String, Integer>();
+        mapTest.put("press", 1);
+        mapTest.put("viva", 1);
+        mapTest.put("intou", 1);
+        mapTest.put("respo", 1);
         mapTest.put("noire", 1);
         mapTest.put("condé", 1);
         mapTest.put("dossi", 1);
@@ -90,6 +87,15 @@ public class FileHandlerTest {
     
     private Map<String,Integer> createMapForDocument3() {
         Map<String,Integer> map3 = new HashMap<String,Integer>();
+        map3.put("chans",1);
+        map3.put("rire",1);
+        map3.put("vidéo",1);
+        map3.put("photo",1);
+        map3.put("disco",1);
+        map3.put("news",1);
+        map3.put("biogr",1);
+        map3.put("sy",2);
+        map3.put("omar",2);
         map3.put("intou",1);
         map3.put("film",1);
         map3.put("triom",1);
@@ -99,8 +105,6 @@ public class FileHandlerTest {
         map3.put("compt",1);
         map3.put("acteu",1);
         map3.put("parti",1);
-        map3.put("sy",1);
-        map3.put("omar",1);
         map3.put("testo",1);
         map3.put("fred",1);
         map3.put("tande",1);
@@ -157,7 +161,7 @@ public class FileHandlerTest {
     @Test
     public void parseQRelsTest () {       
 
-        List<PertinenceBean> qrels = fileHandler.parseQRelsForRequest(new File("D:\\RI\\qrels\\qrel_testQ1.txt")) ;
+        List<PertinenceBean> qrels = fileHandler.parseQRelsForRequest(new File("D:\\RI\\qrel_testQ1.txt")) ;
         List<PertinenceBean> expectedQrels = new ArrayList<PertinenceBean>();
         
         expectedQrels.add(createPertinenceBean("Q1", "D1.html", 1));

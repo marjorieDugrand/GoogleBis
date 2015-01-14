@@ -44,6 +44,8 @@ public class PertinenceDAOImpl implements PertinenceDAO{
     }
     
     public void createPertinence(PertinenceBean pertinence) {
+        System.out.println("doc : " + pertinence.getDocumentName());
+        System.out.println("req : " + pertinence.getRequest());
         int docID = documentDAO.readDocumentByName(pertinence.getDocumentName()).getId();
         int requestID = requestDAO.readRequestByName(pertinence.getRequest()).getId();
         DAOUtilities.executeCreate(PERTINENCE_CREATE,

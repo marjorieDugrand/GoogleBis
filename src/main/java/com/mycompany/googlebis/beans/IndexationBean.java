@@ -43,14 +43,20 @@ public class IndexationBean implements Comparable {
     public int compareTo(Object o) {
         if(o.getClass() == IndexationBean.class) {
             IndexationBean bean = (IndexationBean)o;
-            if(this.weight >= bean.getWeight()) {
-                return documentName.compareTo(bean.getDocumentName());
-            } else {
+            if(this.weight < bean.getWeight()) {
                 return 1;
+            } else if(this.weight > bean.getWeight()) {
+                return -1;
+            } else {
+                return documentName.compareTo(bean.getDocumentName());
             }
         }
         return 0;
     }
+    
+    /*The value 0 if the argument is a string lexicographically equal to this string;
+    a value less than 0 if the argument is a string lexicographically greater than this string;
+    and a value greater than 0 if the argument is a string lexicographically less than this string*/
     
     @Override
     public boolean equals(Object o) {

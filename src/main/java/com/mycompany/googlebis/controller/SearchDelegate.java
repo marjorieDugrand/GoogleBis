@@ -13,6 +13,7 @@ import com.mycompany.googlebis.dao.DAOFactory;
 import com.mycompany.googlebis.dao.IndexationDAO;
 import com.mycompany.googlebis.dao.PertinenceDAO;
 import com.mycompany.googlebis.dao.RequestDAO;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,23 +44,41 @@ public class SearchDelegate {
     public SortedSet<IndexationBean> recoverRequestDocument(String requestName)  {
         System.out.println("delegate searching request " + requestName);
         request = requestName;
-        String requestText = requestDAO.readRequestByName(requestName).getText();
+        String requestText = requestDAO.readRequestByName(request).getText();
         List<String> importantWords = fileHandler.parseRequest(requestText);
-        Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(importantWords);
-        System.out.println("delegate analysing documents");
+        return recoverDocumentsAssociatedWithWords(importantWords);
+    }
+    
+    public SortedSet<IndexationBean> recoverSemanticRequestDocument(String requestName) {
+        //TODO
+        List<String> words = new ArrayList<String>();
+        //TODO
+        return recoverDocumentsAssociatedWithWords(words);
+    }
+    
+    public SortedSet<IndexationBean> recoverDocumentsAssociatedWithWords(List<String> words) {
+        Map<String, RelationBean> documents = indexationDAO.getDocumentCorrespondingToWords(words);
         results = new TreeSet<IndexationBean>();
         for(String docName: documents.keySet()) {
-            RelationBean relations = documents.get(docName);
-            IndexationBean indexation = relations.getWordIndexations().get(0);
-            int weightSum = 0;
-            for(IndexationBean index: relations.getWordIndexations()) {
-                weightSum += index.getWeight();
-            }
-            weightSum = (new Double(Math.pow(weightSum, relations.getIndexationsSize()))).intValue();
-            indexation.setWeight(weightSum);
+            IndexationBean indexation = analyzeDocumentWeight(documents.get(docName));
             results.add(indexation);
         }
+        //TODO : delete after tests
+        for(IndexationBean ib: results) {
+            System.out.println("documentName : " + ib.getDocumentName() + " weight : " + ib.getWeight());
+        }
         return results;
+    }
+    
+    private IndexationBean analyzeDocumentWeight(RelationBean relations) {
+        IndexationBean indexation = relations.getWordIndexations().get(0);
+        int weightSum = 0;
+        for(IndexationBean index: relations.getWordIndexations()) {
+            weightSum += index.getWeight();
+        }
+        weightSum = (new Double(Math.pow(weightSum, relations.getIndexationsSize()))).intValue();
+        indexation.setWeight(weightSum);
+        return indexation;
     }
     
     public double evaluateResultsPrecision(Integer precisionLevel) {
@@ -70,7 +89,7 @@ public class SearchDelegate {
             PertinenceBean bean = pertinenceDAO.readPertinence(request, result.getDocumentName());
             precision += bean.getPertinence();
         }
-        return precision;
+        return precision/precisionLevel;
     }
     
 }

@@ -39,7 +39,7 @@ public class FileHandler {
     private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
     private static final String QRELSREPOSITORY = DIRECTORY + "qrels" ;
     
-    private static final String documentRegexp = "[\\s!\"?;()&\':\\.,’_@\\\\«»-]+";
+    private static final String documentRegexp = "[\\s!\"?;()&\':\\.,’_@\\\\«»\\–\\-\\[\\]\\|]+";
     private static final String requestRegexp = "[\\s,]+";
     
     private static final int tailleMots = 5 ;
@@ -86,6 +86,7 @@ public class FileHandler {
      */
     public Map<String,Integer> parseDocument(File document) {
         Map<String, Integer> wordMap = new HashMap<String, Integer>() ;
+        System.out.println("parsing doc : " + document.getName());
         try {
             String[] words = getDocumentImportantWords(document);
             for (String word : words) {
@@ -127,8 +128,9 @@ public class FileHandler {
         Document doc = Jsoup.parse(document, "UTF-8");
         String text = doc.select("meta[name=description]").attr("content");
         text += " " + doc.select("meta[name=keywords]").attr("content");
-        //text += doc.select("title").text();
-        System.out.println("text recovered : " + text);
+       /* text += " " + doc.select("title").text();
+        //text += " " + doc.select("p").text();*/
+        text += " " + doc.body().text();
         return text.split(documentRegexp);
     }
     
@@ -247,13 +249,8 @@ public class FileHandler {
     
     private Float StringToFloat(String number) {
         float numberFloat = 0 ;
-        if (("1").equals(number))
+        if (("1").equals(number) || ("0,5").equals(number))
             numberFloat = (float) 1;
-        if (("0,5").equals(number))
-            numberFloat = (float) 0.5 ;
-        if (("0").equals(number))
-            numberFloat = (float) 0 ;
-        
         return (Float) numberFloat ;
     }
 }
