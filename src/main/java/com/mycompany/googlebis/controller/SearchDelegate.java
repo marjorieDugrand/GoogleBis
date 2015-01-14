@@ -63,10 +63,6 @@ public class SearchDelegate {
             IndexationBean indexation = analyzeDocumentWeight(documents.get(docName));
             results.add(indexation);
         }
-        //TODO : delete after tests
-        for(IndexationBean ib: results) {
-            System.out.println("documentName : " + ib.getDocumentName() + " weight : " + ib.getWeight());
-        }
         return results;
     }
     
@@ -86,6 +82,7 @@ public class SearchDelegate {
         double precision = 0;
         for(int i=0; i < precisionLevel && iterator.hasNext(); i++) {
             IndexationBean result = iterator.next();
+            System.out.println("doc : " + result.getDocumentName());
             PertinenceBean bean = pertinenceDAO.readPertinence(request, result.getDocumentName());
             precision += bean.getPertinence();
         }
