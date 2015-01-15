@@ -49,6 +49,11 @@ public class IndexationDAOImpl implements IndexationDAO{
     
     private static final String DELETE_TABLE = 
             "DELETE FROM CONTAINEDIN";
+       
+    private static final String WORD_FREQUENCY = 
+            "SELECT COUNT(c.id) as FREQUENCY "
+          + "FROM CONTAINEDIN c, WORDS w "
+          + "WHERE w.word = ? AND w.word_id = c.word_id ";
     
     private final WordDAO wordDAO;
     private final DocumentDAO documentDAO;
@@ -59,16 +64,22 @@ public class IndexationDAOImpl implements IndexationDAO{
     }
     public Map<String,RelationBean> getDocumentCorrespondingToWords(List<String> words) {
         Map<String, RelationBean> results = new HashMap<String, RelationBean>();
+        int corpusSize = documentDAO.getCorpusSize();
         for(String word: words) {
-            ResultSet rs = DAOUtilities.executeQuery(READ_DOCUMENTS_BY_WORD_CONTAINED, word);
+            ResultSet rs = DAOUtilities.executeQuery(READ_DOCUMENTS_BY_WORD_CONTAINED, word);   
+            int frequency = getWordFrequencyInCorpus(word);
+            double ponderation = Math.log((double)((double)corpusSize/(double)frequency));
+            System.out.println("corpus size : " + corpusSize);
+            System.out.println("frequency : " + frequency);
+            System.out.println("ponderation : " + ponderation);
             try {
                 while(rs.next()) {
                     String documentName = rs.getString("doc_name");
                     IndexationBean wordIndexation = new IndexationBean();
                     wordIndexation.setDocumentName(documentName);
                     wordIndexation.setDocumentLink(rs.getString("link"));
-                    wordIndexation.setWeight(rs.getInt("weight"));
-                    
+                    double weight = rs.getInt("weight") * ponderation;
+                    wordIndexation.setWeight(weight);
                     if(!results.containsKey(documentName)) {
                         results.put(documentName, new RelationBean());
                     }
@@ -141,5 +152,20 @@ public class IndexationDAOImpl implements IndexationDAO{
 
     public void deleteTable() {
         DAOUtilities.executeDelete(DELETE_TABLE);
+    }
+    
+    public int getWordFrequencyInCorpus(String word) {
+        int frequency = 1;
+        ResultSet resultSet = DAOUtilities.executeQuery(WORD_FREQUENCY, word);
+        try {
+            if(resultSet.next() ) {
+                frequency = resultSet.getInt("FREQUENCY");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DAOUtilities.silentClose(resultSet);
+        }
+        return frequency;
     }
 }

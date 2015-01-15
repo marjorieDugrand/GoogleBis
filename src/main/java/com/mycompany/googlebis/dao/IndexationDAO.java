@@ -30,4 +30,6 @@ public interface IndexationDAO {
     public void deleteIndexationByWord(String word);
     
     public void deleteTable();
+    
+    public int getWordFrequencyInCorpus(String word);
 }

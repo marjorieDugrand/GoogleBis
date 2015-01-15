@@ -21,6 +21,8 @@ public interface DocumentDAO {
     
     public DocumentBean readDocumentByName(String name);
     
+    public int getCorpusSize();
+    
     public void deleteDocumentByName(String name);
     
     public void deleteTable();

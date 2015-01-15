@@ -12,9 +12,18 @@ package com.mycompany.googlebis.beans;
  */
 public class IndexationBean implements Comparable {
     
+    private String word;
+
+    public String getWord() {
+        return word;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
+    }
     private String documentName;
     private String documentLink;
-    private int weight;
+    private double weight;
 
     public String getDocumentLink() {
         return documentLink;
@@ -32,11 +41,11 @@ public class IndexationBean implements Comparable {
         this.documentName = documentName;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 

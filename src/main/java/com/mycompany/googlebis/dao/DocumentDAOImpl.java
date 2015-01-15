@@ -36,6 +36,9 @@ public class DocumentDAOImpl implements DocumentDAO {
     private static final String DELETE_TABLE =
             "DELETE FROM DOCUMENTS";
         
+    private static final String DOCUMENTS_COUNT = 
+            "SELECT COUNT(*) as DOCCOUNT FROM DOCUMENTS";
+    
     public void createDocument(DocumentBean document) {
         DAOUtilities.executeCreate(DOCUMENT_CREATE,
                                    document.getName(),
@@ -89,5 +92,20 @@ public class DocumentDAOImpl implements DocumentDAO {
 
     public void deleteTable() {
         DAOUtilities.executeDelete(DELETE_TABLE);
+    }
+    
+    public int getCorpusSize() {
+        int size = 0;
+        ResultSet resultSet = DAOUtilities.executeQuery(DOCUMENTS_COUNT);
+        try {
+            if(resultSet.next() ) {
+                size = resultSet.getInt("DOCCOUNT");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(WordDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DAOUtilities.silentClose(resultSet);
+        }
+        return size;
     }
 }

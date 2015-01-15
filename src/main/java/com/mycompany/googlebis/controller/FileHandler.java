@@ -39,10 +39,10 @@ public class FileHandler {
     private static final File REQUESTFILE = new File (DIRECTORY + "requests.html") ;
     private static final String QRELSREPOSITORY = DIRECTORY + "qrels" ;
     
-    private static final String documentRegexp = "[\\s!\"?;()&\':\\.,’_@\\\\«»\\–\\-\\[\\]\\|]+";
+    private static final String documentRegexp = "[\\s!\"?;()&\':\\.,’_@\\\\«/»\\–\\-\\[\\]\\|]+";
     private static final String requestRegexp = "[\\s,]+";
     
-    private static final int tailleMots = 5 ;
+    private static final int tailleMots = 7 ;
     
     private List<String> stopList;
     

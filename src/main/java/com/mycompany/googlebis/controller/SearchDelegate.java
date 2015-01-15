@@ -10,10 +10,10 @@ import com.mycompany.googlebis.beans.IndexationBean;
 import com.mycompany.googlebis.beans.PertinenceBean;
 import com.mycompany.googlebis.beans.RelationBean;
 import com.mycompany.googlebis.dao.DAOFactory;
+import com.mycompany.googlebis.dao.DocumentDAO;
 import com.mycompany.googlebis.dao.IndexationDAO;
 import com.mycompany.googlebis.dao.PertinenceDAO;
 import com.mycompany.googlebis.dao.RequestDAO;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,28 +32,37 @@ public class SearchDelegate {
     private final RequestDAO requestDAO;
     private final PertinenceDAO pertinenceDAO;
     private final FileHandler fileHandler;
+    private final DocumentDAO documentDAO;
     
     public SearchDelegate() {
         DAOFactory factory = DAOFactory.getInstance();
         indexationDAO = factory.getIndexationDAO();
         requestDAO = factory.getRequestDAO();
         pertinenceDAO = factory.getPertinenceDAO();
+        documentDAO = factory.getDocumentDAO();
         fileHandler = new FileHandler();
     }
     
-    public SortedSet<IndexationBean> recoverRequestDocument(String requestName)  {
-        System.out.println("delegate searching request " + requestName);
-        request = requestName;
-        String requestText = requestDAO.readRequestByName(request).getText();
-        List<String> importantWords = fileHandler.parseRequest(requestText);
+    public SortedSet<IndexationBean> recoverRequestDocument(String requestName, boolean useSemanticVersion)  {
+        List<String> importantWords = retrieveWordsToSearch(requestName, useSemanticVersion);
         return recoverDocumentsAssociatedWithWords(importantWords);
     }
     
-    public SortedSet<IndexationBean> recoverSemanticRequestDocument(String requestName) {
-        //TODO
-        List<String> words = new ArrayList<String>();
-        //TODO
-        return recoverDocumentsAssociatedWithWords(words);
+    private List<String> retrieveWordsToSearch(String requestName, boolean useSemanticVersion) {
+        String requestText = retrieveRequestText(requestName);
+        List<String> words = null;
+        if(useSemanticVersion) {
+            //TODO
+        } else {
+            words = fileHandler.parseRequest(requestText);
+        }
+        return words;
+    }
+    
+    private String retrieveRequestText(String requestName) {
+        System.out.println("delegate searching request " + requestName);
+        request = requestName;
+        return requestDAO.readRequestByName(request).getText();
     }
     
     public SortedSet<IndexationBean> recoverDocumentsAssociatedWithWords(List<String> words) {
@@ -72,7 +81,7 @@ public class SearchDelegate {
         for(IndexationBean index: relations.getWordIndexations()) {
             weightSum += index.getWeight();
         }
-        weightSum = (new Double(Math.pow(weightSum, relations.getIndexationsSize()))).intValue();
+        //weightSum = (new Double(Math.pow(weightSum, relations.getIndexationsSize()))).intValue();
         indexation.setWeight(weightSum);
         return indexation;
     }

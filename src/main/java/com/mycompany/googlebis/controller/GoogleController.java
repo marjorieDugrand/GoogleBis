@@ -23,8 +23,8 @@ public class GoogleController {
     }
    
     
-    public SortedSet<IndexationBean> recoverRequestDocument(String requestName)  {
-        return searchDelegate.recoverRequestDocument(requestName);
+    public SortedSet<IndexationBean> recoverRequestDocument(String requestName, boolean useSemanticVersion)  {
+        return searchDelegate.recoverRequestDocument(requestName, useSemanticVersion);
     }
     
     public double evaluateResultsPrecision(Integer precisionLevel) {

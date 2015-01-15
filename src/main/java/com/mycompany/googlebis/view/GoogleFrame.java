@@ -12,7 +12,6 @@ import java.util.SortedSet;
 import javax.swing.DefaultListModel;
 
 /**
- *
  * @author Marjorie
  */
 public class GoogleFrame extends javax.swing.JFrame {
@@ -53,6 +52,7 @@ public class GoogleFrame extends javax.swing.JFrame {
         corpusInfo = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultsList = new javax.swing.JList();
+        useSemanticVersion = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,6 +89,8 @@ public class GoogleFrame extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(resultsList);
 
+        useSemanticVersion.setText("use Semantic version");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,9 +109,12 @@ public class GoogleFrame extends javax.swing.JFrame {
                                 .addComponent(corpusInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(useSemanticVersion))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(precisionLabelPart1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -132,9 +137,15 @@ public class GoogleFrame extends javax.swing.JFrame {
                     .addComponent(requestText, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(requestLabel)
                     .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(useSemanticVersion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(precisionLabelPart1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(precisionText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -155,20 +166,26 @@ public class GoogleFrame extends javax.swing.JFrame {
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         String request = requestText.getText();
         if(request != null && !request.isEmpty()) {
-            System.out.println("searching request " + request);
-            SortedSet<IndexationBean> results = googleController.recoverRequestDocument(request);
-            System.out.println("documents found");
+            evaluationText.setText("");
+            precisionText.setText("");
             resultModel = new DefaultListModel();
-            if(results.isEmpty()) {
-                resultModel.addElement("No document found");
-            } else {
-                for(IndexationBean index: results) {
-                    resultModel.addElement(index.getDocumentName());
+            if("Q1".compareTo(request) <= 0 && "Q9".compareTo(request) >= 0) {
+                boolean useSV = useSemanticVersion.isSelected();
+                System.out.println("searching request " + request);
+                SortedSet<IndexationBean> results = googleController.recoverRequestDocument(request, useSV);
+                System.out.println("documents found");
+                if(results.isEmpty()) {
+                    resultModel.addElement("No document found");
+                } else {
+                    for(IndexationBean index: results) {
+                        resultModel.addElement(index.getDocumentName());
+                    }
                 }
+            } else {
+               resultModel.addElement("request : " + requestText  + " not understood");
             }
             resultsList.setModel(resultModel);
-        }
-        
+        }   
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void validateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validateButtonActionPerformed
@@ -199,6 +216,7 @@ public class GoogleFrame extends javax.swing.JFrame {
     private javax.swing.JList resultsList;
     private javax.swing.JButton searchButton;
     private javax.swing.JButton storeCorpusButton;
+    private javax.swing.JCheckBox useSemanticVersion;
     private javax.swing.JButton validateButton;
     // End of variables declaration//GEN-END:variables
     private javax.swing.DefaultListModel resultModel;
