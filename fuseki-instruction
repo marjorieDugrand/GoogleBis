@@ -1,0 +1,11 @@
+Pour lancer le serveur fuseki :
+
+- Télécharger le serveur fuseki
+- S'attribuer les droits d'exécution du fichier "fuseki-server" (commande chmod)
+- Dans le dossier "fuseki", entrer la commande : ./fuseki-server --config=config.ttl
+- Dans le navigateur, aller à l'adresse : http://localhost:3030
+- cliquer sur Control Panel
+- Selectionner le dataset "/space"
+- Charger l'ontologie
+
+
