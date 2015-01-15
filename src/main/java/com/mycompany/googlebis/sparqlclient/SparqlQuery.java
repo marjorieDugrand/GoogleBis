@@ -55,10 +55,18 @@ public class SparqlQuery {
         }
     }
     
-    public static List<String> getAllSynonymes(String word) {
-        List<String> subClasses = new ArrayList<String>() ;
+    public List<String> getAllSynonymes(List<String> words) {
+        List<String> synonymes = new ArrayList<String>();
+        for(String word: words) {
+            synonymes.addAll(getWordSynonymes(word));
+        }
+        return synonymes;
+    }
+    
+    public List<String> getWordSynonymes(String word) {
+        List<String> subClasses;
         List<String> synonymes = new ArrayList<String>() ;
-        List<String> results = new ArrayList<String>() ;
+        List<String> results;
 
         subClasses = getSubClassOf(word);
         for (String subclass : subClasses) {

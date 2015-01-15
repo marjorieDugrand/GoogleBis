@@ -42,7 +42,7 @@ public class GoogleControllerTest {
     @Test
     public void request() {
         googleController.storeCorpus();
-        SortedSet<IndexationBean> results = googleController.recoverRequestDocument("personnes Intouchables");
+        SortedSet<IndexationBean> results = googleController.recoverRequestDocument("personnes Intouchables",false);
         for(IndexationBean index: results) {
             System.out.println("document name: " + index.getDocumentName());
             System.out.println("document link: " + index.getDocumentLink());

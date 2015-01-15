@@ -10,10 +10,10 @@ import com.mycompany.googlebis.beans.IndexationBean;
 import com.mycompany.googlebis.beans.PertinenceBean;
 import com.mycompany.googlebis.beans.RelationBean;
 import com.mycompany.googlebis.dao.DAOFactory;
-import com.mycompany.googlebis.dao.DocumentDAO;
 import com.mycompany.googlebis.dao.IndexationDAO;
 import com.mycompany.googlebis.dao.PertinenceDAO;
 import com.mycompany.googlebis.dao.RequestDAO;
+import com.mycompany.googlebis.sparqlclient.SparqlQuery;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,15 +32,16 @@ public class SearchDelegate {
     private final RequestDAO requestDAO;
     private final PertinenceDAO pertinenceDAO;
     private final FileHandler fileHandler;
-    private final DocumentDAO documentDAO;
+    private final SparqlQuery sparqlQuery;
+    
     
     public SearchDelegate() {
         DAOFactory factory = DAOFactory.getInstance();
         indexationDAO = factory.getIndexationDAO();
         requestDAO = factory.getRequestDAO();
         pertinenceDAO = factory.getPertinenceDAO();
-        documentDAO = factory.getDocumentDAO();
         fileHandler = new FileHandler();
+        sparqlQuery = new SparqlQuery();
     }
     
     public SortedSet<IndexationBean> recoverRequestDocument(String requestName, boolean useSemanticVersion)  {
@@ -52,7 +53,7 @@ public class SearchDelegate {
         String requestText = retrieveRequestText(requestName);
         List<String> words = null;
         if(useSemanticVersion) {
-            //TODO
+            words = sparqlQuery.getAllSynonymes(words);
         } else {
             words = fileHandler.parseRequest(requestText);
         }
