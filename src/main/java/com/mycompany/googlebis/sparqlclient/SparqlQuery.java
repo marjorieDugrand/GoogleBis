@@ -69,6 +69,7 @@ public class SparqlQuery {
         }
         
         results = splitList(synonymes);
+        results.add(word);
         
        return results ;
     }
